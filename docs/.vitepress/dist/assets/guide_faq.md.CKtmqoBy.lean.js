@@ -1,0 +1,1 @@
+import{_ as i,o as a,c as e,ag as o}from"./chunks/framework.CAXxHpAX.js";const p=JSON.parse('{"title":"常见问题","description":"","frontmatter":{},"headers":[],"relativePath":"guide/faq.md","filePath":"guide/faq.md"}'),r={name:"guide/faq.md"};function t(n,l,s,d,u,c){return a(),e("div",null,[...l[0]||(l[0]=[o("",37)])])}const g=i(r,[["render",t]]);export{p as __pageData,g as default};
