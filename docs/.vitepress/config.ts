@@ -6,6 +6,7 @@ export default defineConfig({
   lang: 'zh-CN',
 
   themeConfig: {
+    logo: '/logo.png',
     nav: [
       { text: '首页', link: '/' },
       { text: '通用说明', link: '/guide/common-principles' },
