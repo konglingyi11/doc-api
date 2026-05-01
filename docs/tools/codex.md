@@ -22,13 +22,22 @@ Codex 的配置通过以下方式：
 
 ### 方法 1：使用配置文件
 
-1. 创建或编辑 `~/.codex/config.toml`
-2. 添加以下内容：
+1. 创建 `~/.codex/auth.json`：
+
+```json
+{
+  "OPENAI_API_KEY": "你的API Key"
+}
+```
+
+2. 创建或编辑 `~/.codex/config.toml`：
 
 ```toml
-[api]
-api_key = "你的API Key"
-base_url = "https://api.1010101.asia/"
+model_provider = "custom"
+model = "gpt-4o"
+
+[model_providers.custom]
+base_url = "https://api.1010101.asia/v1"
 ```
 
 3. 保存文件
@@ -43,8 +52,8 @@ codex
 1. 设置环境变量：
 
 ```bash
+export OPENAI_BASE_URL="https://api.1010101.asia/v1"
 export OPENAI_API_KEY="你的API Key"
-export OPENAI_BASE_URL="https://api.1010101.asia/"
 ```
 
 2. 启动 Codex：

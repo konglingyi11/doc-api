@@ -26,8 +26,8 @@ Claude Code 的配置通过以下方式：
 2. 设置环境变量：
 
 ```bash
-export ANTHROPIC_API_KEY="你的API Key"
-export ANTHROPIC_BASE_URL="https://api.1010101.asia/"
+export ANTHROPIC_AUTH_TOKEN="你的API Key"
+export ANTHROPIC_BASE_URL="https://api.1010101.asia"
 ```
 
 3. 启动 Claude Code：
@@ -42,8 +42,10 @@ claude
 
 ```json
 {
-  "apiKey": "你的API Key",
-  "baseUrl": "https://api.1010101.asia/"
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "你的API Key",
+    "ANTHROPIC_BASE_URL": "https://api.1010101.asia"
+  }
 }
 ```
 
@@ -67,9 +69,8 @@ claude
 ### 环境变量方式（Windows PowerShell）
 
 ```powershell
-$env:ANTHROPIC_API_KEY="sk-ant-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-$env:ANTHROPIC_BASE_URL="https://api.1010101.asia/"
-claude
+[System.Environment]::SetEnvironmentVariable("ANTHROPIC_BASE_URL", "https://api.1010101.asia", [System.EnvironmentVariableTarget]::User)
+[System.Environment]::SetEnvironmentVariable("ANTHROPIC_AUTH_TOKEN", "你的API Key", [System.EnvironmentVariableTarget]::User)
 ```
 
 ### 配置文件方式
