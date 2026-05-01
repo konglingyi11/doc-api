@@ -8,7 +8,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: '首页', link: '/' },
-      { text: '通用说明', link: '/guide/api-key' },
+      { text: '通用说明', link: '/guide/common-principles' },
       { text: '工具配置', link: '/tools/claude-code' },
       { text: '常见问题', link: '/guide/faq' }
     ],
