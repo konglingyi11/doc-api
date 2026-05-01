@@ -66,26 +66,37 @@ codex
 
 ### 配置文件方式
 
+**auth.json：**
+
+```json
+{
+  "OPENAI_API_KEY": "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+```
+
+**config.toml：**
+
 ```toml
-[api]
-api_key = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-base_url = "https://api.1010101.asia/"
+model_provider = "custom"
+model = "gpt-4o"
+
+[model_providers.custom]
+base_url = "https://api.1010101.asia/v1"
 ```
 
 ### 环境变量方式（macOS/Linux）
 
 ```bash
+export OPENAI_BASE_URL="https://api.1010101.asia/v1"
 export OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-export OPENAI_BASE_URL="https://api.1010101.asia/"
 codex
 ```
 
 ### 环境变量方式（Windows PowerShell）
 
 ```powershell
-$env:OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-$env:OPENAI_BASE_URL="https://api.1010101.asia/"
-codex
+[System.Environment]::SetEnvironmentVariable("OPENAI_BASE_URL", "https://api.1010101.asia/v1", [System.EnvironmentVariableTarget]::User)
+[System.Environment]::SetEnvironmentVariable("OPENAI_API_KEY", "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", [System.EnvironmentVariableTarget]::User)
 ```
 
 ## 如何验证生效
