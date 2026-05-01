@@ -9,7 +9,7 @@ Continue 是一个编辑器插件，支持 VS Code 和 JetBrains IDE。它通过
 ## 配置前需要准备什么
 
 - 有效的 API Key
-- 默认 Base URL：`https://api.1010101.asia/`
+- 示例 Base URL：`https://api.1010101.asia/`
 
 ## 从哪里打开配置入口
 

@@ -9,7 +9,7 @@ Cursor 是一个独立的代码编辑器，内置 AI 编程助手功能。它支
 ## 配置前需要准备什么
 
 - 有效的 API Key
-- 默认 Base URL：`https://api.1010101.asia/`
+- 示例 Base URL：`https://api.1010101.asia/`
 
 ## 从哪里打开配置入口
 

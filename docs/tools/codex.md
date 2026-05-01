@@ -9,7 +9,7 @@ Codex 是一个 CLI 工具，支持通过 ChatGPT 登录或 API Key 模式使用
 ## 配置前需要准备什么
 
 - 有效的 API Key
-- 默认 Base URL：`https://api.1010101.asia/`
+- 示例 Base URL：`https://api.1010101.asia/`
 
 ## 从哪里打开配置入口
 

@@ -9,7 +9,7 @@ Claude Code 是一个 CLI 工具，需要在终端中使用。它支持通过环
 ## 配置前需要准备什么
 
 - 有效的 API Key
-- 默认 Base URL：`https://api.1010101.asia/`
+- 示例 Base URL：`https://api.1010101.asia/`
 
 ## 从哪里打开配置入口
 
