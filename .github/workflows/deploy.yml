@@ -13,8 +13,8 @@ on:
 
 env:
   NODE_VERSION: '20'
-  DEPLOY_DIR: '/var/www/doc-api'
-  BACKUP_DIR: '/var/www/doc-api-backups'
+  DEPLOY_DIR: '/opt/1panel/www/sites/doc.api.1010101.asia/index'
+  BACKUP_DIR: '/opt/1panel/www/sites/doc.api.1010101.asia/backups'
 
 jobs:
   build-and-deploy:
@@ -106,7 +106,6 @@ jobs:
             mv /tmp/VERSION.txt ${{ env.DEPLOY_DIR }}/
 
             # 设置权限
-            chown -R www-data:www-data ${{ env.DEPLOY_DIR }}
             chmod -R 755 ${{ env.DEPLOY_DIR }}
 
             # 清理临时文件
