@@ -5,3 +5,9 @@ docs/.vitepress/cache/
 docs/.vitepress/dist/
 .DS_Store
 .claude/
+
+# CI/CD 敏感文件
+github-actions-key
+github-actions-key.pub
+*.pem
+deploy.tar.gz

@@ -1,0 +1,137 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v1.0.0)'
+        required: false
+        default: ''
+
+env:
+  NODE_VERSION: '20'
+  DEPLOY_DIR: '/var/www/doc-api'
+  BACKUP_DIR: '/var/www/doc-api-backups'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build documentation
+        run: npm run docs:build
+
+      - name: Generate version tag
+        id: version
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="v$(date +'%Y%m%d-%H%M%S')-${{ github.sha:0:7 }}"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Generated version: $VERSION"
+
+      - name: Create deployment package
+        run: |
+          cd docs/.vitepress/dist
+          tar -czf ../../deploy.tar.gz .
+          cd ../..
+          echo "$(date +'%Y-%m-%d %H:%M:%S') - ${{ steps.version.outputs.version }}" >> VERSION.txt
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          script: |
+            # 创建目录
+            mkdir -p ${{ env.DEPLOY_DIR }}
+            mkdir -p ${{ env.BACKUP_DIR }}
+
+            # 备份当前版本
+            if [ -d "${{ env.DEPLOY_DIR }}" ] && [ "$(ls -A ${{ env.DEPLOY_DIR }} 2>/dev/null)" ]; then
+              BACKUP_NAME="backup-$(date +'%Y%m%d-%H%M%S').tar.gz"
+              tar -czf ${{ env.BACKUP_DIR }}/$BACKUP_NAME -C ${{ env.DEPLOY_DIR }} .
+              echo "✅ Backup created: $BACKUP_NAME"
+
+              # 保留最近 10 个备份
+              cd ${{ env.BACKUP_DIR }}
+              ls -t | tail -n +11 | xargs -r rm -f
+              echo "✅ Old backups cleaned (keeping last 10)"
+            fi
+
+      - name: Upload and extract
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          source: "deploy.tar.gz,VERSION.txt"
+          target: "/tmp"
+
+      - name: Extract and finalize
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          script: |
+            # 清空目标目录
+            rm -rf ${{ env.DEPLOY_DIR }}/*
+
+            # 解压新版本
+            tar -xzf /tmp/deploy.tar.gz -C ${{ env.DEPLOY_DIR }}
+
+            # 保存版本信息
+            mv /tmp/VERSION.txt ${{ env.DEPLOY_DIR }}/
+
+            # 设置权限
+            chown -R www-data:www-data ${{ env.DEPLOY_DIR }}
+            chmod -R 755 ${{ env.DEPLOY_DIR }}
+
+            # 清理临时文件
+            rm -f /tmp/deploy.tar.gz
+
+            echo "✅ Deployment completed: ${{ steps.version.outputs.version }}"
+            echo "📁 Deployed to: ${{ env.DEPLOY_DIR }}"
+
+      - name: Create Git tag
+        if: github.event.inputs.version != ''
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git tag -a "${{ steps.version.outputs.version }}" -m "Release ${{ steps.version.outputs.version }}"
+          git push origin "${{ steps.version.outputs.version }}"
+
+      - name: Deployment summary
+        run: |
+          echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Version:** ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Deployed to:** ${{ secrets.SERVER_HOST }}:${{ env.DEPLOY_DIR }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📋 Backups" >> $GITHUB_STEP_SUMMARY
+          echo "Backups are stored in: \`${{ env.BACKUP_DIR }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "Last 10 backups are retained automatically." >> $GITHUB_STEP_SUMMARY
