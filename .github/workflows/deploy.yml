@@ -42,7 +42,7 @@ jobs:
           if [ -n "${{ github.event.inputs.version }}" ]; then
             VERSION="${{ github.event.inputs.version }}"
           else
-            VERSION="v$(date +'%Y%m%d-%H%M%S')-${{ github.sha:0:7 }}"
+            VERSION="v$(date +'%Y%m%d-%H%M%S')-${GITHUB_SHA:0:7}"
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Generated version: $VERSION"
