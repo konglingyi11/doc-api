@@ -1,5 +1,8 @@
 import { defineConfig } from 'vitepress'
 
+// 从环境变量或 VERSION.txt 读取版本号
+const version = process.env.npm_package_version || '1.0.0'
+
 export default defineConfig({
   title: 'API Key 与 Base URL 配置文档',
   description: '帮助你在常见编程工具中快速配置自定义 API Key 与 Base URL',
@@ -51,6 +54,12 @@ export default defineConfig({
 
     search: {
       provider: 'local'
+    },
+
+    // 在页脚显示版本号
+    footer: {
+      message: `Released under the MIT License. Version v${version}`,
+      copyright: 'Copyright © 2026-present'
     }
   }
 })

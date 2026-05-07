@@ -35,7 +35,15 @@ jobs:
         run: npm ci
 
       - name: Build documentation
-        run: npm run docs:build
+        run: |
+          # 设置版本号环境变量
+          echo "VITEPRESS_VERSION=${{ steps.version.outputs.version }}" >> $GITHUB_ENV
+
+          # 更新 package.json 版本号
+          npm version ${{ steps.version.outputs.version }} --no-git-tag-version --allow-same-version || true
+
+          # 构建
+          npm run docs:build
 
       - name: Generate version tag
         id: version
