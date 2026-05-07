@@ -5,8 +5,8 @@
 
 set -e
 
-DEPLOY_DIR="${DEPLOY_DIR:-/var/www/doc-api}"
-BACKUP_DIR="${BACKUP_DIR:-/var/www/doc-api-backups}"
+DEPLOY_DIR="${DEPLOY_DIR:-/srv/doc-api/current}"
+BACKUP_DIR="${BACKUP_DIR:-/srv/doc-api/backups}"
 
 # 颜色输出
 RED='\033[0;31m'

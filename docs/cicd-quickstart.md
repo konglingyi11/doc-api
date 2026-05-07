@@ -23,6 +23,9 @@ sudo bash /tmp/setup-server.sh
 | `SERVER_USER` | SSH 用户名 |
 | `SERVER_SSH_KEY` | SSH 私钥内容 |
 | `SERVER_PORT` | SSH 端口（默认 22） |
+| `DEPLOY_DIR` | 服务器部署目录 |
+| `BACKUP_DIR` | 服务器备份目录 |
+| `SITE_URL` | 可选，部署后健康检查 URL |
 
 ### 3️⃣ 触发部署
 
@@ -69,13 +72,13 @@ ssh -i github-actions-key user@your-server
 
 ```bash
 # 查看部署版本
-cat /var/www/doc-api/VERSION.txt
+cat "$DEPLOY_DIR/VERSION.txt"
 
 # 查看备份列表
-ls -lt /var/www/doc-api-backups/
+ls -lt "$BACKUP_DIR/"
 
 # 手动回滚
-bash scripts/rollback.sh
+DEPLOY_DIR="$DEPLOY_DIR" BACKUP_DIR="$BACKUP_DIR" bash scripts/rollback.sh
 
 # 查看 Nginx 日志
 tail -f /var/log/nginx/doc-api-access.log
@@ -116,8 +119,8 @@ v20240115-143022-abc1234
 
 3. **检查服务器权限**
    ```bash
-   ls -la /var/www/doc-api
-   ls -la /var/www/doc-api-backups
+   ls -la "$DEPLOY_DIR"
+   ls -la "$BACKUP_DIR"
    ```
 
 ### 站点无法访问
@@ -160,7 +163,7 @@ v20240115-143022-abc1234
 /var/log/nginx/doc-api-error.log
 
 # 版本信息
-/var/www/doc-api/VERSION.txt
+$DEPLOY_DIR/VERSION.txt
 ```
 
 ## 🔐 安全检查清单
@@ -168,7 +171,7 @@ v20240115-143022-abc1234
 - [ ] 使用专用部署用户（非 root）
 - [ ] SSH 密钥已加密存储在 GitHub Secrets
 - [ ] 服务器防火墙已配置
-- [ ] Nginx 配置已优化（gzip、缓存）
+- [ ] Nginx 配置已优化（gzip、缓存、安全头）
 - [ ] 定期检查备份完整性
 - [ ] 定期更新服务器软件
 

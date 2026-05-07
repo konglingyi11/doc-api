@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
-// 从环境变量或 VERSION.txt 读取版本号
-const version = process.env.npm_package_version || '1.0.0'
+const rawVersion = process.env.VITEPRESS_VERSION || process.env.npm_package_version || '1.0.0'
+const version = rawVersion.replace(/^v/, '')
 
 export default defineConfig({
   title: 'API Key 与 Base URL 配置文档',
@@ -18,6 +18,26 @@ export default defineConfig({
     ],
 
     sidebar: {
+      '/cicd': [
+        {
+          text: '部署运维',
+          items: [
+            { text: 'CI/CD 快速参考', link: '/cicd-quickstart' },
+            { text: 'CI/CD 配置说明', link: '/cicd-setup' },
+            { text: 'GitHub Secrets 配置', link: '/github-secrets-setup' }
+          ]
+        }
+      ],
+      '/github-secrets-setup': [
+        {
+          text: '部署运维',
+          items: [
+            { text: 'CI/CD 快速参考', link: '/cicd-quickstart' },
+            { text: 'CI/CD 配置说明', link: '/cicd-setup' },
+            { text: 'GitHub Secrets 配置', link: '/github-secrets-setup' }
+          ]
+        }
+      ],
       '/guide/': [
         {
           text: '通用说明',
@@ -49,7 +69,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com' }
+      { icon: 'github', link: 'https://github.com/konglingyi11/doc-api' }
     ],
 
     search: {

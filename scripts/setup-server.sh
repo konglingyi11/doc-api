@@ -8,8 +8,8 @@ set -e
 echo "🚀 开始配置 CI/CD 部署环境..."
 
 # 配置变量
-DEPLOY_DIR="${DEPLOY_DIR:-/var/www/doc-api}"
-BACKUP_DIR="${BACKUP_DIR:-/var/www/doc-api-backups}"
+DEPLOY_DIR="${DEPLOY_DIR:-/srv/doc-api/current}"
+BACKUP_DIR="${BACKUP_DIR:-/srv/doc-api/backups}"
 NGINX_CONF="/etc/nginx/sites-available/doc-api"
 
 # 检查是否为 root 用户
@@ -41,6 +41,12 @@ server {
 
     root $DEPLOY_DIR;
     index index.html;
+
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    add_header Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'" always;
 
     location / {
         try_files \$uri \$uri/ \$uri.html =404;
@@ -137,6 +143,8 @@ echo "   - SERVER_HOST: $(hostname -I | awk '{print $1}')"
 echo "   - SERVER_USER: $USER"
 echo "   - SERVER_SSH_KEY: [私钥内容]"
 echo "   - SERVER_PORT: 22"
+echo "   - DEPLOY_DIR: $DEPLOY_DIR"
+echo "   - BACKUP_DIR: $BACKUP_DIR"
 echo ""
 echo "5. 推送代码到 master 分支触发自动部署"
 echo ""

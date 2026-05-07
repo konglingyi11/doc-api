@@ -12,16 +12,18 @@
 
 2. **构建步骤**
    - 检出代码
+   - 生成语义化版本号
    - 安装 Node.js 20
    - 安装依赖（npm ci）
    - 构建文档（npm run docs:build）
    - 打包构建产物
 
 3. **部署步骤**
+   - 通过单个 SSH 部署步骤上传并发布
    - 备份当前版本到服务器
-   - 上传新版本到服务器
    - 解压并设置权限
-   - 创建 Git 标签（手动触发时）
+   - 检查 `index.html` 是否存在
+   - 创建 Git 标签
 
 ## ⚙️ 必需配置
 
@@ -35,6 +37,9 @@
 | `SERVER_USER` | SSH 用户名 | `root` 或 `www-user` |
 | `SERVER_SSH_KEY` | SSH 私钥 | 见下方说明 |
 | `SERVER_PORT` | SSH 端口（可选） | `22`（默认） |
+| `DEPLOY_DIR` | 服务器部署目录 | `/srv/doc-api/current` |
+| `BACKUP_DIR` | 服务器备份目录 | `/srv/doc-api/backups` |
+| `SITE_URL` | 部署后健康检查 URL（可选） | `https://your-domain.example` |
 
 ### 2. SSH 密钥配置
 
@@ -81,15 +86,14 @@ chmod 700 ~/.ssh
 
 ```bash
 # 创建部署目录（nginx 根目录）
-sudo mkdir -p /var/www/doc-api
+sudo mkdir -p /srv/doc-api/current
 
 # 创建备份目录
-sudo mkdir -p /var/www/doc-api-backups
+sudo mkdir -p /srv/doc-api/backups
 
 # 设置权限（根据你的 SSH 用户调整）
-sudo chown -R $USER:$USER /var/www/doc-api
-sudo chown -R $USER:$USER /var/www/doc-api-backups
-sudo chmod -R 755 /var/www/doc-api
+sudo chown -R $USER:www-data /srv/doc-api
+sudo chmod -R 775 /srv/doc-api
 ```
 
 ### 4. Nginx 配置
@@ -101,8 +105,14 @@ server {
     listen 80;
     server_name your-domain.com;  # 替换为你的域名或 IP
 
-    root /var/www/doc-api;
+    root /srv/doc-api/current;
     index index.html;
+
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    add_header Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'" always;
 
     location / {
         try_files $uri $uri/ $uri.html =404;
@@ -136,9 +146,18 @@ sudo nginx -s reload
 
 每次自动部署会生成版本号：
 ```
-v20240115-143022-abc1234
+v1.0.1
 ```
-格式：`v日期-时间-Git提交哈希前7位`
+格式：`vMAJOR.MINOR.PATCH`。workflow 内部写入 `package.json` 时使用无 `v` 的 semver，Git 标签和页脚显示使用带 `v` 的格式。
+
+如果仓库还没有任何版本标签，可以先初始化：
+
+```bash
+git tag v1.0.0
+git push github v1.0.0
+```
+
+如果没有手动初始化，首次成功部署也会从 `v1.0.0` 开始创建标签。
 
 ### 手动指定版本
 
@@ -159,7 +178,7 @@ v20240115-143022-abc1234
 ### 自动备份
 
 每次部署前会自动备份当前版本：
-- 备份位置：`/var/www/doc-api-backups/`
+- 备份位置：由 `BACKUP_DIR` GitHub Secret 配置
 - 备份命名：`backup-YYYYMMDD-HHMMSS.tar.gz`
 - 保留策略：最近 10 个备份
 
@@ -168,20 +187,20 @@ v20240115-143022-abc1234
 **查看可用备份：**
 
 ```bash
-ls -lt /var/www/doc-api-backups/
+ls -lt "$BACKUP_DIR/"
 ```
 
 **回滚到指定备份：**
 
 ```bash
 # 1. 清空当前版本
-rm -rf /var/www/doc-api/*
+find "$DEPLOY_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
 
 # 2. 解压备份
-tar -xzf /var/www/doc-api-backups/backup-20240115-143022.tar.gz -C /var/www/doc-api
+tar -xzf "$BACKUP_DIR/backup-20240115-143022.tar.gz" -C "$DEPLOY_DIR"
 
 # 3. 设置权限
-chown -R www-data:www-data /var/www/doc-api
+chmod -R u=rwX,g=rX,o=rX "$DEPLOY_DIR"
 ```
 
 ## 🔐 安全建议
@@ -199,10 +218,11 @@ chown -R www-data:www-data /var/www/doc-api
    ```bash
    # 编辑 /etc/ssh/sshd_config
    Match User deploy-user
-       ForceCommand /bin/bash
        AllowTcpForwarding no
        X11Forwarding no
    ```
+
+   不建议把部署用户切换为 restricted shell；当前部署流程需要 `scp` 和标准 shell 执行远端发布脚本。应使用专用用户、目录权限、SSH key 和最小 sudo 权限控制风险。
 
 3. **使用防火墙限制访问**
    ```bash
@@ -224,10 +244,10 @@ chown -R www-data:www-data /var/www/doc-api
 
 ```bash
 # 查看版本信息
-cat /var/www/doc-api/VERSION.txt
+cat "$DEPLOY_DIR/VERSION.txt"
 
 # 查看备份列表
-ls -lt /var/www/doc-api-backups/
+ls -lt "$BACKUP_DIR/"
 ```
 
 ## 🛠️ 故障排查
@@ -242,8 +262,8 @@ ls -lt /var/www/doc-api-backups/
 
 2. **检查目录权限**
    ```bash
-   ls -la /var/www/doc-api
-   ls -la /var/www/doc-api-backups
+   ls -la "$DEPLOY_DIR"
+   ls -la "$BACKUP_DIR"
    ```
 
 3. **检查磁盘空间**
@@ -261,20 +281,14 @@ getenforce
 sudo setenforce 0
 
 # 或设置正确的 SELinux 上下文
-sudo chcon -R -t httpd_sys_content_t /var/www/doc-api
+sudo chcon -R -t httpd_sys_content_t "$DEPLOY_DIR"
 ```
 
 ## 📝 自定义配置
 
 ### 修改部署目录
 
-编辑 `.github/workflows/deploy.yml`：
-
-```yaml
-env:
-  DEPLOY_DIR: '/your/custom/path'
-  BACKUP_DIR: '/your/backup/path'
-```
+在 GitHub Secrets 中更新 `DEPLOY_DIR` 和 `BACKUP_DIR`，不要把生产路径写入 workflow。
 
 ### 修改 Node.js 版本
 

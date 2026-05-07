@@ -1,17 +1,30 @@
 {
   "name": "doc",
   "version": "1.0.0",
+  "description": "VitePress documentation for API Key and Base URL configuration across AI coding tools.",
   "type": "module",
   "scripts": {
+    "sync:api-urls": "node scripts/sync-api-urls.mjs",
     "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
+    "docs:build": "npm run sync:api-urls && vitepress build docs",
     "docs:preview": "vitepress preview docs"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "vitepress",
+    "api-key",
+    "base-url",
+    "ai-tools",
+    "documentation"
+  ],
+  "author": "konglingyi11",
   "license": "ISC",
-  "description": "",
+  "overrides": {
+    "vite": "^6.4.2",
+    "esbuild": "^0.25.0"
+  },
   "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3",
     "vitepress": "^1.6.4"
   }
 }
