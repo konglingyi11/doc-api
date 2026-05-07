@@ -30,15 +30,22 @@ Claude Code 的 Base URL 应该填根地址，**不带** `/v1` 后缀。
 
 ## 模型名怎么填
 
-Claude Code 默认使用 Claude 3.5 Sonnet，通常不需要手动指定模型名。
+Claude Code 默认使用 Claude Sonnet 4.6，通常不需要手动指定模型名。
 
 如果需要切换模型，可以在启动时指定：
 
 ```bash
-claude --model claude-3-5-sonnet-20241022
+claude --model claude-sonnet-4-6
 ```
 
+**推荐模型**：
+- `claude-sonnet-4-6` - 速度与智能的最佳平衡（推荐）
+- `claude-opus-4-7` - 最强大的通用模型
+- `claude-haiku-4-5` - 最快速度
+
 也可以去模型广场确认最新可用模型。
+
+**注意**：模型名称可能随时更新，请以服务商提供的最新模型列表为准。
 
 ## 最短完整配置步骤
 

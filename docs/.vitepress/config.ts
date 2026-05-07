@@ -18,26 +18,6 @@ export default defineConfig({
     ],
 
     sidebar: {
-      '/cicd': [
-        {
-          text: '部署运维',
-          items: [
-            { text: 'CI/CD 快速参考', link: '/cicd-quickstart' },
-            { text: 'CI/CD 配置说明', link: '/cicd-setup' },
-            { text: 'GitHub Secrets 配置', link: '/github-secrets-setup' }
-          ]
-        }
-      ],
-      '/github-secrets-setup': [
-        {
-          text: '部署运维',
-          items: [
-            { text: 'CI/CD 快速参考', link: '/cicd-quickstart' },
-            { text: 'CI/CD 配置说明', link: '/cicd-setup' },
-            { text: 'GitHub Secrets 配置', link: '/github-secrets-setup' }
-          ]
-        }
-      ],
       '/guide/': [
         {
           text: '通用说明',

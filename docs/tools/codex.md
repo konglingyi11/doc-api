@@ -30,9 +30,16 @@ Codex 的 Base URL 应该带 `/v1` 后缀。
 
 ## 模型名怎么填
 
-Codex 默认使用 `gpt-5.3-codex` 模型。
+Codex 默认使用 `gpt-5.4` 模型。
 
 可以在配置文件中指定模型，也可以去模型广场确认最新可用模型。
+
+**推荐模型**：
+- `gpt-5.4` - 最新GPT-5系列主模型（推荐）
+- `gpt-4o` - 多模态模型
+- `gpt-4-turbo` - GPT-4 Turbo版本
+
+**注意**：模型名称可能随时更新，请以服务商提供的最新模型列表为准。
 
 ## 最短完整配置步骤
 
@@ -49,7 +56,7 @@ npm i -g @openai/codex --registry=https://registry.npmmirror.com
 
 ```toml
 model_provider = "custom"
-model = "gpt-5.3-codex"
+model = "gpt-5.4"
 model_reasoning_effort = "xhigh"
 disable_response_storage = true
 
@@ -195,7 +202,7 @@ Windows 用户注意：
 
 ```toml
 model_provider = "custom"
-model = "gpt-5.3-codex"
+model = "gpt-5.4"
 model_reasoning_effort = "xhigh"
 disable_response_storage = true
 
