@@ -41,12 +41,26 @@ jobs:
         id: version
         run: |
           if [ -n "${{ github.event.inputs.version }}" ]; then
+            # 手动指定版本号
             VERSION="${{ github.event.inputs.version }}"
           else
-            VERSION="v$(date +'%Y%m%d-%H%M%S')-${GITHUB_SHA:0:7}"
+            # 自动递增版本号：从 Git tags 获取最新版本号并递增
+            LATEST_TAG=$(git tag --list 'v*' --sort=-version:refname | head -n 1)
+
+            if [ -z "$LATEST_TAG" ]; then
+              # 没有标签，使用初始版本
+              VERSION="v1.0.0"
+            else
+              # 提取主版本号并递增
+              MAJOR=$(echo $LATEST_TAG | sed 's/v\([0-9]*\)\..*/\1/')
+              NEW_MAJOR=$((MAJOR + 1))
+              VERSION="v${NEW_MAJOR}.0.0"
+            fi
           fi
+
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Generated version: $VERSION"
+          echo "Previous version: ${LATEST_TAG:-none}"
 
       - name: Create deployment package
         run: |
