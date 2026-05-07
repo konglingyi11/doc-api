@@ -80,6 +80,10 @@ jobs:
           # 创建版本文件
           echo "$(date +'%Y-%m-%d %H:%M:%S') - ${{ steps.version.outputs.version }}" >> VERSION.txt
 
+          # 列出工作目录文件（调试）
+          echo "📁 Working directory files:"
+          ls -lah .
+
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -113,6 +117,7 @@ jobs:
           port: ${{ secrets.SERVER_PORT || 22 }}
           source: "deploy.tar.gz,VERSION.txt"
           target: "/tmp"
+          strip_components: 0
 
       - name: Extract and finalize
         uses: appleboy/ssh-action@v1.0.3
