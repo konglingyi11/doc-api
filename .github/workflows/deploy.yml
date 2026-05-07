@@ -50,6 +50,9 @@ jobs:
 
       - name: Create deployment package
         run: |
+          # 切换到项目根目录
+          cd ${{ github.workspace }}
+
           # 检查 dist 目录是否存在
           if [ ! -d "docs/.vitepress/dist" ]; then
             echo "❌ Error: docs/.vitepress/dist directory does not exist"
@@ -70,19 +73,20 @@ jobs:
 
           # 打包文件
           cd docs/.vitepress/dist
-          tar -czf ../../deploy.tar.gz .
-          cd ../..
+          tar -czf ${{ github.workspace }}/deploy.tar.gz .
+          cd ${{ github.workspace }}
 
           # 验证打包文件
           echo "📦 Deployment package created:"
           ls -lh deploy.tar.gz
 
           # 创建版本文件
-          echo "$(date +'%Y-%m-%d %H:%M:%S') - ${{ steps.version.outputs.version }}" >> VERSION.txt
+          echo "$(date +'%Y-%m-%d %H:%M:%S') - ${{ steps.version.outputs.version }}" > VERSION.txt
 
           # 列出工作目录文件（调试）
           echo "📁 Working directory files:"
-          ls -lah .
+          pwd
+          ls -lah ${{ github.workspace }}
 
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
