@@ -17,6 +17,12 @@ for (const key of requiredKeys) {
   if (typeof urls[key] !== 'string' || urls[key].trim() === '') {
     throw new Error(`Missing required URL config: ${key}`)
   }
+
+  // Validate URL format
+  const urlPattern = /^https?:\/\/[^\s]+$/
+  if (!urlPattern.test(urls[key])) {
+    throw new Error(`Invalid URL format for ${key}: ${urls[key]}`)
+  }
 }
 
 const replacements = buildReplacements(urls, previousUrls)
@@ -26,16 +32,21 @@ collectMarkdownFiles(docsDir, markdownFiles)
 
 let changedCount = 0
 for (const file of markdownFiles) {
-  const original = fs.readFileSync(file, 'utf8')
-  let updated = original
+  try {
+    const original = fs.readFileSync(file, 'utf8')
+    let updated = original
 
-  for (const [pattern, replacement] of replacements) {
-    updated = updated.replace(pattern, replacement)
-  }
+    for (const [pattern, replacement] of replacements) {
+      updated = updated.replace(pattern, replacement)
+    }
 
-  if (updated !== original) {
-    fs.writeFileSync(file, updated)
-    changedCount += 1
+    if (updated !== original) {
+      fs.writeFileSync(file, updated)
+      changedCount += 1
+    }
+  } catch (err) {
+    console.error(`Failed to process ${file}: ${err.message}`)
+    throw err
   }
 }
 
