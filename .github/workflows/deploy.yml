@@ -50,9 +50,34 @@ jobs:
 
       - name: Create deployment package
         run: |
+          # 检查 dist 目录是否存在
+          if [ ! -d "docs/.vitepress/dist" ]; then
+            echo "❌ Error: docs/.vitepress/dist directory does not exist"
+            exit 1
+          fi
+
+          # 检查 dist 目录是否为空
+          if [ -z "$(ls -A docs/.vitepress/dist 2>/dev/null)" ]; then
+            echo "❌ Error: docs/.vitepress/dist directory is empty"
+            echo "Contents of docs/.vitepress/:"
+            ls -la docs/.vitepress/
+            exit 1
+          fi
+
+          # 显示 dist 目录内容
+          echo "📦 Contents of dist directory:"
+          ls -la docs/.vitepress/dist/
+
+          # 打包文件
           cd docs/.vitepress/dist
           tar -czf ../../deploy.tar.gz .
           cd ../..
+
+          # 验证打包文件
+          echo "📦 Deployment package created:"
+          ls -lh deploy.tar.gz
+
+          # 创建版本文件
           echo "$(date +'%Y-%m-%d %H:%M:%S') - ${{ steps.version.outputs.version }}" >> VERSION.txt
 
       - name: Deploy to server
