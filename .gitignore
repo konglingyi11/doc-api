@@ -5,6 +5,9 @@ docs/.vitepress/cache/
 docs/.vitepress/dist/
 .DS_Store
 .claude/
+AGENTS.md
+CLAUDE.md
+docs/superpowers/
 
 # CI/CD 敏感文件
 github-actions-key
