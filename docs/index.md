@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: "编程工具 API 接入文档"
+  name: "途联通证配置文档"
   text: "先锁定你正在用的工具"
   tagline: "不同工具的接口格式、baseURL 写法、模型字段要求可能不同，先进入对应工具页，再按该工具的要求填写。"
   actions:

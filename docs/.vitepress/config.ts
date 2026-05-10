@@ -4,12 +4,12 @@ const rawVersion = process.env.VITEPRESS_VERSION || process.env.npm_package_vers
 const version = rawVersion.replace(/^v/, '')
 
 export default defineConfig({
-  title: 'API Key 与 Base URL 配置文档',
-  description: '帮助你在常见编程工具中快速配置自定义 API Key 与 Base URL',
+  title: '途联通证配置文档',
+  description: '帮助你在常见编程工具中快速配置 API Key、Base URL 与模型接入方式',
   lang: 'zh-CN',
 
   themeConfig: {
-    logo: '/logo.png',
+    logo: 'https://rustfs.1010101.asia/api.1010101.asia/logo.png',
     nav: [
       { text: '首页', link: '/' },
       { text: '通用说明', link: '/guide/common-principles' },
