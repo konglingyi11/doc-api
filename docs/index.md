@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: "途联通证配置文档"
-  text: "按工具填写，不靠猜"
-  tagline: "不同工具对接口格式、baseURL 和模型字段的要求不一样。找到你正在用的工具页，照着对应说明配置。"
+  text: "选择工具，查看配置方法"
+  tagline: "这里整理了常见 AI 编程工具的 API Key、Base URL 和模型配置方法。先找到你正在用的工具，再按对应页面填写。"
   actions:
     - theme: brand
       text: 选择工具
@@ -15,13 +15,13 @@ hero:
 
 features:
   - title: 找到对应工具
-    details: Claude Code、Codex、OpenCode、编辑器插件和桌面客户端的入口不同，先进入对应页面。
+    details: Claude Code、Codex、OpenCode、编辑器插件和桌面客户端的配置入口不同，先进入对应页面。
   - title: 确认接口格式
-    details: 看清工具使用 OpenAI Chat、OpenAI Responses 还是 Anthropic Messages，路径和字段会不一样。
+    details: 看清工具使用 OpenAI Chat、OpenAI Responses 还是 Anthropic Messages，不同格式的路径和字段不一样。
   - title: 填写必要字段
     details: API Key、baseURL、模型名和 Provider 按工具页填写，不要直接套用别的工具配置。
   - title: 发请求验证
-    details: 配完立刻测试一次，重点看 401、404、模型不存在和接口格式不匹配。
+    details: 配完后测试一次，重点检查 401、404、模型不存在和接口格式不匹配。
 ---
 
 ## 选择你正在用的工具
