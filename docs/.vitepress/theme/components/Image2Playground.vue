@@ -81,7 +81,9 @@ async function handleCreateImage() {
     addHistoryItem(result.imageUrl)
     statusMessage.value = mode.value === 'edit' ? '编辑完成。可以下载，也可以继续编辑。' : '生成完成。可以下载，也可以继续编辑。'
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : '请求失败。请检查 Key、接口权限或浏览器控制台。'
+    errorMessage.value = error instanceof Error
+      ? `${error.message} 请检查 API Key、Base URL 和接口权限后重试。`
+      : '请求失败。请检查 API Key、Base URL 和接口权限后重试。'
   } finally {
     isLoading.value = false
   }
@@ -294,7 +296,9 @@ function resetMessages() {
           <img v-if="currentImageUrl" :src="currentImageUrl" alt="image2 生成结果" />
           <div v-else class="empty-result">
             <strong>图片显示在这里</strong>
-            <span>生成后可以下载，也可以继续编辑。</span>
+            <span>
+              {{ mode === 'edit' ? '上传图片，写好编辑描述，然后点击“编辑图片”。' : '写好图片描述，然后点击“生成图片”。' }}
+            </span>
           </div>
         </div>
 
@@ -328,7 +332,7 @@ function resetMessages() {
               </div>
             </article>
           </div>
-          <p v-else class="empty-history">还没有历史记录。生成后会显示在这里。</p>
+          <p v-else class="empty-history">还没有历史记录。生成或编辑图片后会显示在这里。</p>
         </div>
       </div>
     </div>
