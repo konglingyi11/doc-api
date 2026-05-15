@@ -1,110 +1,102 @@
-# Roo Code 配置
+# Roo Code 配置教程
 
-Roo Code 是一个 VS Code 扩展，提供 AI 编程助手功能。
+Roo Code 是一个 VS Code AI 编程扩展。
 
-## 这是什么工具
+本文介绍如何配置 API Key、Base URL 和模型名称。
 
-Roo Code 是一个编辑器插件，需要在 VS Code 中安装和使用。它支持多种 AI Provider，包括 OpenAI Compatible。
+## 准备工作
 
-## 配置前需要准备什么
+请先准备：
 
-- 有效的 API Key
-- 示例 Base URL：`https://api.1010101.asia/`
+- 已安装 VS Code。
+- 已安装 Roo Code 扩展。
+- 有效的 API Key。
+- 示例 Base URL：`https://api.1010101.asia/`。
 
-## 从哪里打开配置入口
+## 这个工具使用什么接口
 
-1. 打开 VS Code
-2. 点击左侧活动栏的 Roo Code 图标
-3. 点击右上角的齿轮图标，打开设置面板
+Roo Code 支持多种 AI Provider。
 
-## 最短完整配置步骤
+使用自定义 Base URL 时，选择 `OpenAI Compatible`。
 
-1. 在 Roo Code 设置面板中，找到 `API Provider` 选项
-2. 选择 `OpenAI Compatible`
-3. 在 `Base URL` 字段中输入：`https://api.1010101.asia/`
-4. 在 `API Key` 字段中输入你的 API Key
-5. 在 `Model` 字段中输入模型 ID（如 `gpt-4`）
-6. 点击 `Save` 或 `Verify`
+## 配置步骤
+
+1. 打开 VS Code。
+2. 点击左侧活动栏的 Roo Code 图标。
+3. 点击右上角的齿轮图标，打开设置面板。
+4. 找到 `API Provider`。
+5. 选择 `OpenAI Compatible`。
+6. 在 `Base URL` 字段填写：`https://api.1010101.asia/`。
+7. 在 `API Key` 字段填写你的 API Key。
+8. 在 `Model` 字段填写模型 ID，例如 `gpt-4`。
+9. 点击 `Save` 或 `Verify`。
 
 ## 配置示例
 
-### 设置面板字段
+- **API Provider**：OpenAI Compatible
+- **Base URL**：`https://api.1010101.asia/`
+- **API Key**：`sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+- **Model**：`gpt-4`
 
-- **API Provider**: OpenAI Compatible
-- **Base URL**: `https://api.1010101.asia/`
-- **API Key**: `sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
-- **Model**: `gpt-4`
+## 如何验证
 
-## 如何验证生效
+可以用下面任一方式验证：
 
-1. 在 Roo Code 面板中输入一个简单问题
-2. 点击发送
-3. 如果收到正常回复，说明配置成功
+1. 在 Roo Code 面板中输入一个简单问题。
+2. 点击发送。
+3. 如果能收到正常回复，说明配置成功。
 
 或：
 
-1. 在设置面板中点击 `Verify` 按钮
-2. 如果显示"连接成功"，说明配置正确
+1. 在设置面板中点击 `Verify`。
+2. 如果显示连接成功，说明配置正确。
 
-## 常见报错与排查
+## 常见问题
 
 ### 401 Unauthorized
 
-**原因**：API Key 错误或无效
+通常是 API Key 有问题。
 
-**排查**：
+请检查：
 
-- 检查 API Key 是否正确
-- 检查 API Key 是否有多余空格
-- 确认 API Key 是否已过期或被撤销
+- API Key 是否填错。
+- 前后是否有空格。
+- Key 是否已经失效。
+- Key 是否有权限访问当前模型。
 
 ### 404 Not Found
 
-**原因**：Base URL 错误
+通常是 Base URL 或接口路径有问题。
 
-**排查**：
+请检查：
 
-- 检查 Base URL 是否正确
-- 确认 Base URL 应该是服务商的端点，而不是 `https://api.openai.com/v1`
-- 检查网络连接是否正常
+- Base URL 是否写错。
+- `/v1` 是否多写或少写。
+- 当前工具是否会自动补路径。
 
 ### 模型列表为空
 
-**原因**：Base URL 错误或服务商不支持模型列表查询
+通常是 Base URL 不正确，或服务商不支持模型列表查询。
 
-**排查**：
+请检查：
 
-- 检查 Base URL 是否正确
-- 手动输入模型名
+- Base URL 是否填写正确。
+- 是否可以手动输入模型名。
 
 ### 连接超时
 
-**原因**：网络问题或 Base URL 不可达
+通常是网络问题，或 Base URL 不可访问。
 
-**排查**：
+请检查：
 
-- 检查网络连接
-- 确认 Base URL 可以访问
-- 尝试在浏览器中访问 Base URL
+- 当前网络是否正常。
+- Base URL 是否可以访问。
+- 是否被代理、防火墙或系统网络设置拦截。
 
 ## 注意事项
 
-### Base URL 格式
-
-官方文档提示，Base URL 应该是服务商的端点地址，而不是 OpenAI 的默认地址。
-
-### Provider 选择
-
-Roo Code 支持多种 Provider。选择 `OpenAI Compatible` 以使用自定义 Base URL。
-
-### 模型名称
-
-某些服务商可能使用不同的模型名称。请根据服务商文档确认正确的模型 ID。
-
-### 配置文件
-
-Roo Code 也支持通过配置文件管理 API 配置，支持多个 Profile。详情请参考官方文档。
-
-### VS Code 重启
-
-某些情况下，修改配置后需要重启 VS Code 才能生效。
+- Base URL 应填写服务商端点，不要填写 `https://api.openai.com/v1`。
+- Roo Code 支持多个 Provider，请确认选中的是 `OpenAI Compatible`。
+- 模型 ID 请以服务商提供的模型列表为准。
+- Roo Code 也支持通过配置文件管理 API 配置，并支持多个 Profile。
+- 如果配置没有生效，可以重启 VS Code。

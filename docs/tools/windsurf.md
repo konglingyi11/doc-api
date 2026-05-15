@@ -1,121 +1,107 @@
-# Windsurf 配置
+# Windsurf 配置教程
 
-Windsurf 是一个 AI 代码编辑器，提供内置 AI 编程助手功能。
+Windsurf 是一个带 AI 功能的代码编辑器。
 
-## 这是什么工具
+本文介绍如何配置 API Key、Base URL 和模型名称。
 
-Windsurf 是一个独立的代码编辑器，内置 AI 功能。它支持 BYOK（Bring Your Own Key）模式，允许使用自定义 API Key。
+## 准备工作
 
-## 配置前需要准备什么
+请先准备：
 
-- 有效的 API Key
-- 示例 Base URL：`https://api.1010101.asia/`
+- 已安装 Windsurf。
+- 有效的 API Key。
+- 示例 Base URL：`https://api.1010101.asia/`。
+- 支持 BYOK 的账号或订阅状态。
 
-## 从哪里打开配置入口
+## 这个工具使用什么接口
 
-Windsurf 的 API Key 配置入口：
+Windsurf 支持 BYOK（Bring Your Own Key）模式。
 
-1. 打开 Windsurf
-2. 进入订阅设置页面
-3. 找到"Provider API Keys"页面
+BYOK 主要用于填写自定义 API Key。自定义 Base URL 是否可用，请以当前版本界面为准。
 
-或：
+如果设置里没有自定义 Base URL 字段，以当前版本的实际界面为准。
 
-1. 打开设置
-2. 查找"Provider"或"API Keys"相关设置
+## 配置步骤
 
-## 最短完整配置步骤
+1. 打开 Windsurf。
+2. 进入订阅设置页面。
+3. 找到 `Provider API Keys` 页面。
+4. 选择要配置的 Provider。
+5. 在 `API Key` 字段填写你的 API Key。
+6. 如果你的版本提供 Base URL 字段，可以按下面的方式填写。
+7. 保存设置。
 
-1. 进入"Provider API Keys"页面
-2. 选择要配置的 Provider
-3. 在 `API Key` 字段中输入你的 API Key
-4. 如有 `Base URL` 或 `Endpoint` 字段，输入：`https://api.1010101.asia/`
-5. 保存设置
+也可以在设置中搜索 `Provider` 或 `API Keys`，找到同类入口。
 
 ## 配置示例
 
-### Provider API Keys 设置
+如果你的版本提供 Base URL 字段，可以按下面的方式填写。
 
-- **Provider**: 选择对应 Provider
-- **API Key**: `sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
-- **Base URL**: `https://api.1010101.asia/`（如有此字段）
+- **Provider**：选择对应 Provider
+- **API Key**：`sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+- **Base URL**：`https://api.1010101.asia/`
 
-## 如何验证生效
+如果设置里没有自定义 Base URL 字段，以当前版本的实际界面为准。
 
-1. 在 Windsurf 中使用 AI 功能
-2. 发送一个简单请求
-3. 如果收到正常回复，说明配置成功
+## 如何验证
 
-或：
+1. 在 Windsurf 中使用 AI 功能。
+2. 发送一个简单请求。
+3. 如果能收到正常回复，说明配置成功。
 
-1. 在模型选择中查看是否有 BYOK 标识
-2. 选择 BYOK 模型进行测试
+也可以检查模型选择列表：
 
-## 常见报错与排查
+1. 查看是否有 BYOK 标识。
+2. 选择 BYOK 模型进行测试。
+
+## 常见问题
 
 ### 401 Unauthorized
 
-**原因**：API Key 错误或无效
+通常是 API Key 有问题。
 
-**排查**：
+请检查：
 
-- 检查 API Key 是否正确
-- 检查 API Key 是否有多余空格
-- 确认 API Key 是否已过期或被撤销
+- API Key 是否填错。
+- 前后是否有空格。
+- Key 是否已经失效。
+- Key 是否有权限访问当前模型。
 
 ### 404 Not Found
 
-**原因**：Base URL 错误
+通常是 Base URL 或接口路径有问题。
 
-**排查**：
+请检查：
 
-- 检查 Base URL 是否正确
-- 确认 Base URL 格式符合要求
-- 检查网络连接是否正常
+- Base URL 是否写错。
+- `/v1` 是否多写或少写。
+- 当前工具是否会自动补路径。
 
-### Missing API Key 错误
+### Missing API Key
 
-**原因**：未正确设置 API Key
+通常是 API Key 没有保存成功。
 
-**排查**：
+请检查：
 
-- 确认已在"Provider API Keys"页面填写 API Key
-- 检查 API Key 是否保存成功
+- 是否已经在 `Provider API Keys` 页面填写 API Key。
+- 是否选择了正确的 Provider。
+- 保存后是否需要重新打开设置页确认。
 
 ### BYOK 模型不可用
 
-**原因**：BYOK 仅支持特定模型
+通常是当前模型不支持 BYOK，或账号条件不满足。
 
-**排查**：
+请检查：
 
-- 查看 Windsurf 文档确认 BYOK 支持的模型列表
-- 确认当前选择的模型支持 BYOK
+- Windsurf 文档中 BYOK 支持的模型列表。
+- 当前选择的模型是否带 BYOK 标识。
+- 当前账号或订阅是否支持 BYOK。
 
 ## 注意事项
 
-### BYOK 限制
-
-Windsurf 的 BYOK 功能有以下限制：
-
-- 仅支持特定模型
-- 仅适用于个人用户
-- 需要有效的 API Key
-
-### Base URL 配置
-
-Windsurf 的公开文档对自定义 Base URL 的说明较少。如果设置中没有 Base URL 字段，可能需要：
-
-- 使用环境变量（如支持）
-- 参考 Windsurf 社区或官方支持
-
-### 模型选择
-
-在 Windsurf 中，BYOK 模型通常会有特殊标识。选择带有 BYOK 标识的模型以使用自定义 API Key。
-
-### 订阅状态
-
-某些功能可能需要订阅。请确认你的 Windsurf 订阅状态支持 BYOK 功能。
-
-### 版本差异
-
-Windsurf 的设置界面可能因版本更新而变化。本页面基于 2026 年 5 月的信息，如有变化请以应用内实际界面为准。
+- Windsurf 的 BYOK 可能只支持特定模型。
+- BYOK 可能只适用于个人用户。
+- 某些功能可能需要订阅。
+- Windsurf 的公开文档对自定义 Base URL 说明较少。
+- 如果设置里没有自定义 Base URL 字段，以当前版本的实际界面为准。
+- 本页面基于 2026 年 5 月的信息整理。

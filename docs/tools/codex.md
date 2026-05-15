@@ -1,51 +1,45 @@
-# Codex 配置
+# Codex 配置教程
 
-Codex 是 OpenAI 提供的命令行工具，用于在终端中使用 OpenAI 的代码生成能力。
+Codex 是 OpenAI 提供的命令行代码助手。
 
-## 先判断：这个工具接哪种接口
+本文介绍如何配置 API Key、Base URL 和模型名称。
 
-Codex 主要对接 **OpenAI Responses** 格式。
+## 准备工作
+
+请先准备：
+
+- 已安装 Node.js 18 或更高版本。
+- 有效的 API Key。
+- Base URL：`https://api.1010101.asia/v1`。
+
+## 这个工具使用什么接口
+
+Codex 主要使用 **OpenAI Responses** 格式。
 
 Base URL 需要带 `/v1` 后缀。
 
-## 配置前你要准备什么
+正确示例：
 
-- 有效的 API Key
-- Base URL：`https://api.1010101.asia/v1`（带 `/v1` 后缀）
+```text
+https://api.1010101.asia/v1
+```
 
-## 这些字段分别填哪里
+错误示例：
 
-Codex 支持两种配置方式：
+```text
+https://api.1010101.asia
+```
 
-1. **配置文件**：`~/.codex/config.toml` + `~/.codex/auth.json`
-2. **环境变量**：`OPENAI_API_KEY` 和 `OPENAI_BASE_URL`
+## 配置步骤
 
-## baseURL 这一页该怎么填
+Codex 支持两种常用方式：
 
-Codex 的 Base URL 应该带 `/v1` 后缀。
-
-正确示例：`https://api.1010101.asia/v1`
-
-错误示例：`https://api.1010101.asia`（缺少 `/v1`）
-
-## 模型名怎么填
-
-Codex 默认使用 `gpt-5.4` 模型。
-
-可以在配置文件中指定模型，也可以去模型广场确认最新可用模型。
-
-**推荐模型**：
-- `gpt-5.4` - 最新GPT-5系列主模型（推荐）
-- `gpt-4o` - 多模态模型
-- `gpt-4-turbo` - GPT-4 Turbo版本
-
-**注意**：模型名称可能随时更新，请以服务商提供的最新模型列表为准。
-
-## 最短完整配置步骤
+- 配置文件：`~/.codex/config.toml` 和 `~/.codex/auth.json`。
+- 环境变量：`OPENAI_API_KEY` 和 `OPENAI_BASE_URL`。
 
 ### Windows
 
-1. 安装 Node.js（需 18+）：同 Claude Code
+1. 安装 Node.js 18+。
 2. 安装 Codex：
 
 ```bash
@@ -75,7 +69,7 @@ base_url = "https://api.1010101.asia/v1"
 }
 ```
 
-5. 启动：
+5. 启动 Codex：
 
 ```bash
 codex
@@ -89,7 +83,7 @@ codex
 npm install -g @openai/codex
 ```
 
-2. 配置环境变量（bash）：
+2. 配置环境变量：
 
 ```bash
 echo 'export OPENAI_BASE_URL="https://api.1010101.asia/v1"' >> ~/.bashrc
@@ -97,13 +91,13 @@ echo 'export OPENAI_API_KEY="你的API密钥"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-3. 启动：
+3. 启动 Codex：
 
 ```bash
 codex
 ```
 
-### Mac
+### macOS
 
 1. 安装 Codex：
 
@@ -111,7 +105,7 @@ codex
 npm install -g @openai/codex
 ```
 
-2. 配置环境变量（zsh）：
+2. 配置环境变量：
 
 ```bash
 echo 'export OPENAI_BASE_URL="https://api.1010101.asia/v1"' >> ~/.zshrc
@@ -119,78 +113,32 @@ echo 'export OPENAI_API_KEY="你的API密钥"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
-3. 启动：
+3. 启动 Codex：
 
 ```bash
 codex
 ```
 
-## 如何验证是否成功
+## 配置示例
 
-1. 启动 Codex：
+### 配置文件方式
 
-```bash
-codex
+`~/.codex/config.toml`：
+
+```toml
+model_provider = "custom"
+model = "gpt-5.4"
+model_reasoning_effort = "xhigh"
+disable_response_storage = true
+
+[model_providers.custom]
+name = "custom"
+wire_api = "responses"
+requires_openai_auth = true
+base_url = "https://api.1010101.asia/v1"
 ```
 
-2. 发送一个简单代码生成请求
-3. 如果收到正常回复，说明配置成功
-
-## 常见错误与排查
-
-### 401 Unauthorized
-
-**原因**：API Key 错误或无效
-
-**排查**：
-- 检查 API Key 是否正确
-- 检查 API Key 是否有多余空格
-- 确认 API Key 是否已过期或被撤销
-
-### 404 Not Found
-
-**原因**：Base URL 错误
-
-**排查**：
-- 检查 Base URL 是否正确
-- 确认 Base URL **带** `/v1` 后缀
-- 检查网络连接是否正常
-
-### 配置文件未生效
-
-**原因**：配置文件位置错误或格式错误
-
-**排查**：
-- 确认配置文件路径为 `~/.codex/config.toml` 和 `~/.codex/auth.json`
-- 检查 TOML 格式是否正确
-- 确认已保存文件
-
-## 补充说明
-
-### 配置文件优先级
-
-配置文件优先于环境变量。如果同时设置了配置文件和环境变量，配置文件优先生效。
-
-### 登录模式 vs API Key 模式
-
-Codex 支持两种模式：
-- **登录模式**：使用 ChatGPT 账号登录，无需 API Key
-- **API Key 模式**：使用 API Key，适合自定义 Base URL
-
-本文档说明 API Key 模式。如需使用登录模式，请参考官方文档。
-
-### Windows 路径
-
-Windows 用户注意：
-- 配置文件路径为 `%USERPROFILE%\.codex\config.toml` 和 `%USERPROFILE%\.codex\auth.json`
-- 环境变量设置使用 PowerShell 或系统环境变量设置
-
-### VSCode 扩展
-
-如果要在 VSCode 中使用 Codex：
-
-1. 在 VSCode 扩展市场搜索并安装 **Codex - OpenAI's coding agent**
-2. 在 `~/.codex/auth.json`：
+`~/.codex/auth.json`：
 
 ```json
 {
@@ -198,7 +146,93 @@ Windows 用户注意：
 }
 ```
 
-3. 在 `~/.codex/config.toml`：
+### 环境变量方式
+
+```bash
+export OPENAI_BASE_URL="https://api.1010101.asia/v1"
+export OPENAI_API_KEY="你的API密钥"
+```
+
+## 模型名称
+
+Codex 默认使用 `gpt-5.4` 模型。
+
+也可以在配置文件中指定其他模型。
+
+常见模型：
+
+- `gpt-5.4`
+- `gpt-4o`
+- `gpt-4-turbo`
+
+模型名称可能变化，请以服务商提供的模型列表为准。
+
+## 如何验证
+
+1. 启动 Codex：
+
+```bash
+codex
+```
+
+2. 发送一个简单代码生成请求。
+3. 如果能收到正常回复，说明配置成功。
+
+## 常见问题
+
+### 401 Unauthorized
+
+通常是 API Key 有问题。
+
+请检查：
+
+- API Key 是否填错。
+- 前后是否有空格。
+- Key 是否已经失效。
+- Key 是否有权限访问当前模型。
+
+### 404 Not Found
+
+通常是 Base URL 或接口路径有问题。
+
+请检查：
+
+- Base URL 是否写错。
+- `/v1` 是否多写或少写。
+- 当前工具是否会自动补路径。
+
+### 配置文件未生效
+
+通常是文件位置或格式有问题。
+
+请检查：
+
+- 配置文件是否在 `~/.codex/config.toml`。
+- API Key 是否在 `~/.codex/auth.json`。
+- TOML 和 JSON 格式是否正确。
+- 文件是否已经保存。
+
+## 注意事项
+
+- 配置文件通常优先于环境变量。
+- API Key 模式适合自定义 Base URL。
+- 登录模式使用 ChatGPT 账号，不需要 API Key。
+- Windows 路径可以写成 `%USERPROFILE%\.codex\config.toml` 和 `%USERPROFILE%\.codex\auth.json`。
+
+## VS Code 扩展
+
+如果要在 VS Code 中使用 Codex：
+
+1. 在 VS Code 扩展市场搜索并安装 **Codex - OpenAI's coding agent**。
+2. 在 `~/.codex/auth.json` 写入：
+
+```json
+{
+  "OPENAI_API_KEY": "你的API密钥"
+}
+```
+
+3. 在 `~/.codex/config.toml` 写入：
 
 ```toml
 model_provider = "custom"
