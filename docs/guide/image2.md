@@ -2,31 +2,30 @@
 import Image2Playground from '../.vitepress/theme/components/Image2Playground.vue'
 </script>
 
-# image2 图片接口使用方法
+# image2 在线绘图与接口说明
 
-image2 按 OpenAI 图片生成接口的格式调用。本站示例统一使用：
+想先试效果，可以直接用下面的在线工具。它在你的浏览器里调用 image2 接口，支持生成图片、上传图片继续编辑、下载图片和查看绘图历史。
+
+<Image2Playground />
+
+::: tip 关于 API Key
+如果点击“保存到本浏览器”，Key 只会保存在当前浏览器的 `localStorage` 里，不会写入本站服务器。生成或编辑图片时，浏览器会把 Key 直接发送给 `https://api.1010101.asia` 完成请求。
+:::
+
+## image2 能做什么
+
+image2 按 OpenAI 图片接口格式调用，Base URL 固定使用：
 
 ```text
 https://api.1010101.asia
 ```
 
-完整生成图片地址是：
+它主要有两个接口：
 
-```text
-POST https://api.1010101.asia/v1/images/generations
-```
-
-## 官方接口格式
-
-官方图片生成接口的核心格式是 `POST /v1/images/generations`，请求头使用 Bearer Token，常用请求体字段如下：
-
-| 字段 | 示例 | 说明 |
-|------|------|------|
-| `model` | `gpt-image-2` | 图片生成模型 |
-| `prompt` | `一张写实风格的咖啡产品图` | 图片提示词 |
-| `size` | `1024x1024` | 图片尺寸，也可用 `1024x1536`、`1536x1024` 或 `auto` |
-| `quality` | `medium` | 质量，可用 `low`、`medium`、`high`、`auto` |
-| `output_format` | `png` | 输出格式，可用 `png`、`jpeg`、`webp` |
+| 能力 | 完整地址 | 适合做什么 |
+|------|----------|------------|
+| 生成图片 | `POST https://api.1010101.asia/v1/images/generations` | 从文字提示词生成一张新图 |
+| 编辑图片 | `POST https://api.1010101.asia/v1/images/edits` | 上传一张图，再按提示词继续改图 |
 
 官方文档参考：
 
@@ -34,9 +33,11 @@ POST https://api.1010101.asia/v1/images/generations
 - [OpenAI Images API reference](https://developers.openai.com/api/reference/resources/images)
 - [GPT Image 2 model page](https://developers.openai.com/api/docs/models/gpt-image-2)
 
-## curl 调用示例
+## 生成图片接口
 
-把 `YOUR_API_KEY` 换成你的 Key：
+生成图片使用 JSON 请求体。
+
+### curl 示例
 
 ```bash
 curl -X POST "https://api.1010101.asia/v1/images/generations" \
@@ -51,16 +52,11 @@ curl -X POST "https://api.1010101.asia/v1/images/generations" \
   }'
 ```
 
-接口通常会返回 `data[0].b64_json`。这是图片的 Base64 内容，可以保存成文件，也可以在浏览器里拼成：
-
-```text
-data:image/png;base64,返回的_b64_json
-```
-
-## JavaScript 调用示例
+### JavaScript 示例
 
 ```js
 const apiKey = 'YOUR_API_KEY'
+
 const response = await fetch('https://api.1010101.asia/v1/images/generations', {
   method: 'POST',
   headers: {
@@ -81,56 +77,106 @@ const imageUrl = `data:image/png;base64,${result.data[0].b64_json}`
 document.querySelector('#preview').src = imageUrl
 ```
 
-## 纯前端绘图工具
+## 编辑图片接口
 
-下面这个工具直接在浏览器里调用 image2 接口。它适合快速验证 Key、Base URL、提示词和参数是否可用。
+编辑图片需要用 `multipart/form-data` 上传图片文件。不要手动设置 `Content-Type`，浏览器或 HTTP 客户端会自动补上 boundary。
 
-<Image2Playground />
+### curl 示例
 
-::: warning 使用提醒
-纯前端工具会在浏览器里发起请求，API Key 会出现在本机浏览器的网络请求中。自己测试可以这样用；如果要做公开产品，建议改成后端代理，由服务端保存 Key 并转发请求。
-:::
+```bash
+curl -X POST "https://api.1010101.asia/v1/images/edits" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "model=gpt-image-2" \
+  -F "image=@source.png" \
+  -F "prompt=把背景换成清晨的厨房，保留杯子主体，整体更明亮" \
+  -F "size=1024x1024" \
+  -F "quality=medium" \
+  -F "output_format=png"
+```
 
-如果生成失败，优先检查：
+### JavaScript 示例
 
-- API Key 是否有效
-- Base URL 是否保持为 `https://api.1010101.asia`
-- 浏览器是否因为 CORS 拦截了请求
-- 账号或 Key 是否有图片模型权限
-- 提示词是否触发内容安全策略
+```js
+const apiKey = 'YOUR_API_KEY'
+const fileInput = document.querySelector('#source-image')
 
-## 适合接入哪些工具
+const formData = new FormData()
+formData.append('model', 'gpt-image-2')
+formData.append('image', fileInput.files[0])
+formData.append('prompt', '把背景换成清晨的厨房，保留杯子主体，整体更明亮')
+formData.append('size', '1024x1024')
+formData.append('quality', 'medium')
+formData.append('output_format', 'png')
 
-image2 是图片生成接口，不是聊天补全接口。它适合接入：
+const response = await fetch('https://api.1010101.asia/v1/images/edits', {
+  method: 'POST',
+  headers: {
+    Authorization: `Bearer ${apiKey}`
+  },
+  body: formData
+})
 
-- 自己写的网页绘图工具
-- 需要自动生成配图的前端页面
-- 后端服务、脚本、自动化工作流
+const result = await response.json()
+const imageUrl = `data:image/png;base64,${result.data[0].b64_json}`
+document.querySelector('#preview').src = imageUrl
+```
+
+## 常用字段
+
+| 字段 | 用在 | 示例 | 说明 |
+|------|------|------|------|
+| `model` | 生成、编辑 | `gpt-image-2` | 图片模型 |
+| `prompt` | 生成、编辑 | `一张写实风格的咖啡产品图` | 想生成或修改成什么样 |
+| `image` | 编辑 | `source.png` | 要继续编辑的图片文件 |
+| `size` | 生成、编辑 | `1024x1024` | 也可用 `1024x1536`、`1536x1024`、`auto` |
+| `quality` | 生成、编辑 | `medium` | 可用 `low`、`medium`、`high`、`auto` |
+| `output_format` | 生成、编辑 | `png` | 可用 `png`、`jpeg`、`webp` |
+
+接口通常会返回 `data[0].b64_json`。这是图片的 Base64 内容，可以拼成浏览器可显示的地址：
+
+```text
+data:image/png;base64,返回的_b64_json
+```
+
+## 接入什么工具
+
+image2 是图片接口，不是聊天接口。它适合接入：
+
+- 自己做的网页绘图工具
+- 后端图片生成服务
+- 自动生成封面、配图、商品图的脚本
 - Postman、Apifox、Hoppscotch 这类 API 调试工具
-- 支持自定义 HTTP 请求的低代码或自动化平台
+- 支持自定义 HTTP 请求的自动化平台
 
-它通常不适合直接填进 Claude Code、Codex、Cline、Roo Code、Cursor、Windsurf 这类代码助手的“聊天模型 Base URL”里。那些工具大多调用的是 OpenAI Chat、OpenAI Responses 或 Anthropic Messages，不会自动把聊天请求改成图片生成请求。
+它不适合直接填进 Claude Code、Codex、Cline、Roo Code、Cursor、Windsurf 这类代码助手的聊天模型配置里。那些工具通常调用 OpenAI Chat、OpenAI Responses 或 Anthropic Messages，不会自动把聊天请求改成图片生成或图片编辑请求。
 
-## 接入建议
+## 做成自己的绘图工具
 
-### 只做个人测试
+如果只是自己使用，纯前端工具就够快：浏览器保存 Key、直接请求 image2、把返回的 Base64 图片显示出来。
 
-可以直接用上面的纯前端工具，填 Key、提示词、尺寸和质量后生成。这个方式最快，但只适合自己使用。
-
-### 做公开网页
-
-建议浏览器请求你自己的后端：
+如果要给别人用，建议改成后端代理：
 
 ```text
 浏览器 -> 你的后端 /api/image2 -> https://api.1010101.asia/v1/images/generations
+浏览器 -> 你的后端 /api/image2/edit -> https://api.1010101.asia/v1/images/edits
 ```
 
-这样 API Key 不会暴露给访问者，也更方便做额度限制、日志、错误处理和内容审核。
+这样 Key 不会暴露给访问者，也更方便做额度限制、日志、错误提示和内容安全处理。
 
-### 做自动化脚本
+## 常见问题
 
-用 curl、Node.js、Python 都可以。关键是保持这三点一致：
+### 为什么生成成功但历史记录没有保存？
 
-1. Base URL 使用 `https://api.1010101.asia`
-2. 完整路径使用 `/v1/images/generations`
-3. 请求体使用图片接口字段，不要套用聊天接口的 `messages`
+浏览器的 `localStorage` 空间有限。图片是 Base64，体积可能比较大。如果空间不够，当前图片仍然可以下载，但历史记录可能保存失败。
+
+### 为什么编辑图片失败？
+
+先检查三点：
+
+1. 是否真的上传了图片，或者从历史里点了“继续编辑”
+2. 请求是否走 `POST /v1/images/edits`
+3. 是否用了 `multipart/form-data`，并且没有手动写死 `Content-Type`
+
+### 为什么代码助手里不能直接用 image2？
+
+代码助手通常发的是聊天请求，例如 `messages` 或 `input`。image2 要求的是图片接口字段，例如 `prompt`、`image`、`size`、`quality`。两者不是同一种接口格式。
