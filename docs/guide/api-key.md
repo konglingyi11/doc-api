@@ -1,41 +1,85 @@
-# 什么是 API Key
+# API Key 教程
 
-API Key 就是工具调用接口时用来表明"你是谁"的凭证。
+API Key 是访问接口时使用的密钥。
 
-如果你现在的目标只是把工具接起来,真正要记住的只有 4 件事:
+工具发送请求时，会把 API Key 一起发给服务商。服务商用它判断你是谁、有没有权限、还能不能继续调用。
 
-## 1. Key 填错时最常见的是 401
+## API Key 填在哪里
 
-如果你看到 `401 Unauthorized`,先按这个顺序排查:
+大多数工具会有一个 `API Key` 字段。
 
-- Key 是否复制完整(没有多余空格、没有漏字符)
-- Key 是否来自正确的服务商(OpenAI 的 Key 不能填到 Anthropic 的字段里)
-- Key 是否还有效(去服务商控制台确认没被撤销或过期)
-- Key 是否填对了字段(有些工具区分 "API Key" 和 "Secret Key")
+把你的 Key 填进去即可。
 
-## 2. Key 填在哪里要看工具
+常见位置：
 
-不同工具的字段名和位置都不一样。不要记字段名,直接去工具页看截图和示例:
+- Provider 设置
+- Model Provider 设置
+- API 设置
+- 环境变量
+- 配置文件
 
-- 图形界面工具:通常在设置面板里找 "API Key" 或 "密钥" 字段
-- CLI 工具:通常在配置文件里填 `apiKey` 或类似字段
-- 有些工具支持环境变量(如 `ANTHROPIC_API_KEY`、`OPENAI_API_KEY`)
+具体位置以对应工具页为准。
 
-## 3. 不要把 Key 发到公开地方
+## 填写规则
 
-API Key 是敏感信息:
+- 不要多写空格。
+- 不要换行。
+- 不要把 Base URL 填到 API Key 里。
+- 不要把多个 Key 写在同一个字段里。
+- 一个工具要用哪个 Key，以对应工具页为准。
 
-- 不要提交到公开代码仓库(如果已经提交,立即去服务商控制台撤销并重新生成)
-- 不要发到论坛、群聊、截图里
-- 如果不小心泄露了,立刻撤销旧 Key 并生成新 Key
+## 常见写法
 
-## 4. 不是所有工具都只靠 Key 就能通
+普通文本：
 
-除了 Key,你还可能需要配置:
+```txt
+sk-xxxxxxxxxxxxxxxxxxxxxxxx
+```
 
-- **baseURL**:接口地址(比如中转地址、本地代理地址)
-- **接口格式**:有些工具要求指定 Provider(如 "OpenAI Compatible"、"Anthropic")
-- **模型名**:有些工具要求手动填模型(如 `claude-3-5-sonnet-20241022`)
-- **其他认证信息**:某些中转服务还需要额外的认证头或 Token
+Bash：
 
-这些字段的填写方式,都在对应工具的配置页面里。不要死记,遇到问题去工具页看最快。
+```bash
+export OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxxxxxxxxxx"
+export ANTHROPIC_API_KEY="sk-ant-xxxxxxxxxxxxxxxxxxxxxxxx"
+```
+
+PowerShell：
+
+```powershell
+$env:OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxxxxxxxxxx"
+$env:ANTHROPIC_API_KEY="sk-ant-xxxxxxxxxxxxxxxxxxxxxxxx"
+```
+
+配置文件里常见写法：
+
+```json
+{
+  "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxxxxx"
+}
+```
+
+## 常见错误
+
+### 401 Unauthorized
+
+先检查：
+
+- Key 是否复制完整。
+- Key 前后是否有空格。
+- Key 是否来自正确的服务商。
+- Key 是否已经过期、撤销或额度用完。
+- 字段是否填对，特别是 `API Key` 和其他 Secret 字段。
+
+### Missing API Key
+
+先检查：
+
+- 是否已经点了保存。
+- 是否改完后需要重启或重新加载工具。
+- 是否填到了当前工具正在读取的配置里。
+- 环境变量名是否写对。
+- 配置文件路径是否写对。
+
+## 下一步
+
+继续看 [Base URL 教程](/guide/base-url)。
