@@ -1,3 +1,7 @@
+---
+pageClass: home-page
+---
+
 # 途联通证配置教程
 
 常见 AI 编程工具的 API Key、Base URL 和模型配置教程。

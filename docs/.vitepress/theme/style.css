@@ -5,12 +5,12 @@
   --home-card-hover: #f6f8fa;
 }
 
-.VPDoc.has-aside .content-container,
-.VPDoc:not(.has-aside) .content-container {
+.home-page .VPDoc.has-aside .content-container,
+.home-page .VPDoc:not(.has-aside) .content-container {
   max-width: 1080px;
 }
 
-.vp-doc > h1:first-child {
+.home-page .vp-doc > h1:first-child {
   margin-top: 0;
   font-size: 32px;
   line-height: 1.25;
@@ -79,7 +79,7 @@
 }
 
 @media (max-width: 640px) {
-  .vp-doc > h1:first-child {
+  .home-page .vp-doc > h1:first-child {
     font-size: 28px;
   }
 
