@@ -22,6 +22,8 @@ features:
     details: API Key、baseURL、模型名和 Provider 按工具页填写，不要直接套用别的工具配置。
   - title: 发请求验证
     details: 配完后测试一次，重点检查 401、404、模型不存在和接口格式不匹配。
+  - title: 调用图片接口
+    details: image2 使用 OpenAI 图片生成格式，可查看官方请求体示例，也可以在纯前端工具里直接试用。
 ---
 
 ## 选择你正在用的工具
@@ -45,6 +47,7 @@ features:
 - **OpenAI Chat**：常见的兼容接入方式，注意 `messages` 结构、模型字段和请求路径。
 - **OpenAI Responses**：较新的 OpenAI 风格接口，注意 `input`、Responses 端点和响应格式要求。
 - **Anthropic Messages**：Claude 原生接口常用格式，注意请求头、`messages` 格式和工具是否直接支持 Anthropic。
+- **OpenAI Images**：图片生成接口，image2 使用 `/v1/images/generations`，请求体是 `prompt`、`size`、`quality`、`output_format`，不是聊天接口的 `messages`。
 
 这里用于判断大方向，不替具体工具下结论。即使都支持“自定义接口”，不同工具的填写位置、字段名、`/v1` 规则也可能不同。
 
@@ -55,6 +58,7 @@ features:
 - [通用配置原则](/guide/common-principles)
 - [什么是 API Key](/guide/api-key)
 - [什么是 Base URL](/guide/base-url)
+- [image2 图片接口使用方法](/guide/image2)
 - [如何验证配置是否生效](/guide/verify)
 
 ## 常见问题

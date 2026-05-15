@@ -24,6 +24,7 @@ export default defineConfig({
           items: [
             { text: '什么是 API Key', link: '/guide/api-key' },
             { text: '什么是 Base URL', link: '/guide/base-url' },
+            { text: 'image2 图片接口', link: '/guide/image2' },
             { text: '通用配置原则', link: '/guide/common-principles' },
             { text: '如何验证配置是否生效', link: '/guide/verify' },
             { text: '常见问题', link: '/guide/faq' }
