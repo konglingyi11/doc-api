@@ -13,7 +13,7 @@ import {
 
 const baseUrl = ref('https://api.1010101.asia')
 const apiKey = ref('')
-const prompt = ref('把画面做成清爽的产品宣传图，主体清晰，背景干净，自然光，细节真实')
+const prompt = ref('一张清爽的产品图，主体清晰，背景干净，自然光，细节真实')
 const size = ref('1024x1024')
 const quality = ref('medium')
 const outputFormat = ref('png')
@@ -45,17 +45,17 @@ async function handleCreateImage() {
   resetMessages()
 
   if (!apiKey.value.trim()) {
-    errorMessage.value = '先填写 API Key。需要的话可以点“保存到本浏览器”，下次打开会自动带上。'
+    errorMessage.value = '请先填写 API Key。'
     return
   }
 
   if (!prompt.value.trim()) {
-    errorMessage.value = '写一句你想要的画面描述。'
+    errorMessage.value = '请先写图片描述。'
     return
   }
 
   if (mode.value === 'edit' && !selectedFile.value) {
-    errorMessage.value = '编辑图片前，请先上传一张图片，或从历史记录里点“继续编辑”。'
+    errorMessage.value = '请先上传要编辑的图片。'
     return
   }
 
@@ -79,9 +79,9 @@ async function handleCreateImage() {
     currentPrompt.value = prompt.value
     currentFormat.value = outputFormat.value
     addHistoryItem(result.imageUrl)
-    statusMessage.value = mode.value === 'edit' ? '编辑完成。可以继续编辑，也可以下载图片。' : '生成完成。可以继续编辑，也可以下载图片。'
+    statusMessage.value = mode.value === 'edit' ? '编辑完成。可以下载，也可以继续编辑。' : '生成完成。可以下载，也可以继续编辑。'
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : '请求没有成功，请检查 Key、接口权限或浏览器控制台。'
+    errorMessage.value = error instanceof Error ? error.message : '请求失败。请检查 Key、接口权限或浏览器控制台。'
   } finally {
     isLoading.value = false
   }
@@ -101,18 +101,18 @@ function saveKey() {
   resetMessages()
 
   if (!apiKey.value.trim()) {
-    errorMessage.value = '先填写 API Key，再保存到本浏览器。'
+    errorMessage.value = '请先填写 API Key。'
     return
   }
 
   saveStoredImage2Key(undefined, apiKey.value)
-  statusMessage.value = '已保存。Key 只保存在当前浏览器的 localStorage。'
+  statusMessage.value = '已保存。Key 只在当前浏览器。'
 }
 
 function clearSavedKey() {
   removeStoredImage2Key()
   apiKey.value = ''
-  statusMessage.value = '已从当前浏览器删除保存的 Key。'
+  statusMessage.value = '已删除保存的 Key。'
 }
 
 function setGenerateMode() {
@@ -130,8 +130,8 @@ async function continueEdit(item = getCurrentItem()) {
   selectedFile.value = await dataUrlToFile(item.imageUrl, `image2-edit.${item.outputFormat || 'png'}`)
   sourceImageUrl.value = item.imageUrl
   mode.value = 'edit'
-  prompt.value = `在这张图的基础上继续调整：${item.prompt || '保持主体，优化画面质感'}`
-  statusMessage.value = '已放入编辑模式。修改提示词后点击“编辑图片”。'
+  prompt.value = `继续编辑这张图：${item.prompt || '保留主体，优化质感'}`
+  statusMessage.value = '已切换到编辑模式。改好描述后点击“编辑图片”。'
 }
 
 function downloadImage(item = getCurrentItem()) {
@@ -167,7 +167,7 @@ function addHistoryItem(imageUrl) {
     history.value = saveImage2HistoryItem(undefined, item)
   } catch {
     history.value = [item, ...history.value].slice(0, 12)
-    statusMessage.value = '图片已生成，但浏览器本地空间不足，历史记录可能无法保存。'
+    statusMessage.value = '图片已生成，但本地空间不足，历史记录可能无法保存。'
   }
 }
 
@@ -194,21 +194,21 @@ function resetMessages() {
 </script>
 
 <template>
-  <section class="image2-workbench" aria-label="image2 在线绘图工具">
+  <section class="image2-workbench" aria-label="image2 在线工具">
     <div class="workbench-heading">
       <p class="eyebrow">在线工具</p>
-      <h2>先试一张图</h2>
+      <h2>试生成一张图</h2>
       <p>
-        填入自己的 API Key，就可以直接生成图片；也可以上传图片继续编辑。Key 只保存在当前浏览器，
-        不会写入本站服务器。
+        填入 API Key 后，可以直接生成图片，也可以上传图片继续编辑。
+        Key 只保存在当前浏览器。
       </p>
     </div>
 
     <div class="workbench-layout">
       <div class="control-panel">
-        <div class="mode-switch" role="tablist" aria-label="选择绘图模式">
+        <div class="mode-switch" role="tablist" aria-label="选择模式">
           <button type="button" :class="{ active: mode === 'generate' }" @click="setGenerateMode">
-            生成新图
+            生成图片
           </button>
           <button type="button" :class="{ active: mode === 'edit' }" @click="mode = 'edit'">
             编辑图片
@@ -222,12 +222,12 @@ function resetMessages() {
 
         <div class="key-actions">
           <button type="button" class="secondary" @click="saveKey">保存到本浏览器</button>
-          <button type="button" class="ghost" @click="clearSavedKey">删除保存的 Key</button>
+          <button type="button" class="ghost" @click="clearSavedKey">删除 Key</button>
         </div>
 
         <p class="storage-note">
-          保存后只会写入当前浏览器的 localStorage。生成或编辑时，浏览器会把 Key 发送给
-          <code>https://api.1010101.asia</code> 完成请求。
+          保存后只写入当前浏览器的 localStorage。生成或编辑时，浏览器会把 Key 发送给
+          <code>https://api.1010101.asia</code>。
         </p>
 
         <label>
@@ -236,18 +236,18 @@ function resetMessages() {
         </label>
 
         <label>
-          <span>{{ mode === 'edit' ? '编辑要求' : '画面描述' }}</span>
+          <span>{{ mode === 'edit' ? '编辑描述' : '图片描述' }}</span>
           <textarea v-model="prompt" rows="5" />
         </label>
 
         <label v-if="mode === 'edit'">
-          <span>要编辑的图片</span>
+          <span>上传图片</span>
           <input type="file" accept="image/png,image/jpeg,image/webp" @change="handleFileChange" />
         </label>
 
         <div v-if="sourceImageUrl" class="source-preview">
           <img :src="sourceImageUrl" alt="待编辑图片预览" />
-          <span>当前会基于这张图继续编辑</span>
+          <span>将基于这张图编辑</span>
         </div>
 
         <div class="settings-grid">
@@ -264,8 +264,8 @@ function resetMessages() {
           <label>
             <span>质量</span>
             <select v-model="quality">
-              <option value="medium">标准</option>
-              <option value="low">省量</option>
+              <option value="medium">普通</option>
+              <option value="low">低</option>
               <option value="high">高清</option>
               <option value="auto">自动</option>
             </select>
@@ -293,7 +293,7 @@ function resetMessages() {
         <div class="result-frame">
           <img v-if="currentImageUrl" :src="currentImageUrl" alt="image2 生成结果" />
           <div v-else class="empty-result">
-            <strong>图片会显示在这里</strong>
+            <strong>图片显示在这里</strong>
             <span>生成后可以下载，也可以继续编辑。</span>
           </div>
         </div>
@@ -309,7 +309,7 @@ function resetMessages() {
 
         <div class="history-panel">
           <div class="history-heading">
-            <h3>绘图历史</h3>
+            <h3>历史记录</h3>
             <button type="button" class="ghost" :disabled="history.length === 0" @click="clearHistory">
               清空
             </button>
@@ -328,7 +328,7 @@ function resetMessages() {
               </div>
             </article>
           </div>
-          <p v-else class="empty-history">还没有历史记录。生成第一张图后会自动出现在这里。</p>
+          <p v-else class="empty-history">还没有历史记录。生成后会显示在这里。</p>
         </div>
       </div>
     </div>
