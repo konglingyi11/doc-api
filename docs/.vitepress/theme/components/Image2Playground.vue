@@ -228,6 +228,9 @@ function resetMessages() {
         </div>
 
         <p class="storage-note">
+          还没有 API Key？可以前往
+          <a href="https://api.1010101.asia/console/token" target="_blank" rel="noopener noreferrer">https://api.1010101.asia/console/token</a>
+          获取。
           保存后只写入当前浏览器的 localStorage。生成或编辑时，浏览器会把 Key 发送给
           <code>https://api.1010101.asia</code>。
         </p>
