@@ -4,8 +4,6 @@ Hermes 是一个命令行 AI 助手，支持通过交互式命令配置主模型
 
 本文介绍如何配置 API Key、Base URL 和模型名称。
 
-![Hermes 配置界面示例](/images/hermes/hermes-step-1.png)
-
 ## 准备工作
 
 请先准备：
@@ -38,13 +36,16 @@ Hermes 推荐使用交互式模型配置命令。
 hermes model
 ```
 
+![Hermes 模型配置入口](/images/hermes/hermes-step-1.png)
+
 2. 选择自定义 Provider 或自定义 OpenAI 兼容端点。
+
+![Hermes 模型 Provider 选择示例](/images/hermes/hermes-step-2.png)
+
 3. 输入 Base URL：`https://api.1010101.asia/v1`。
 4. 输入 API Key。
 5. 输入模型名称，例如 `gpt-5.4`。
 6. 保存配置。
-
-![Hermes 模型 Provider 选择示例](/images/hermes/hermes-step-2.png)
 
 ![Hermes 模型配置完成示例](/images/hermes/hermes-step-3.png)
 
