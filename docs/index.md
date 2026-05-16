@@ -25,6 +25,14 @@ pageClass: home-page
     <strong>OpenCode</strong>
     <span>/connect 流程和 provider 写法</span>
   </a>
+  <a class="home-card" href="/tools/openclaw.html">
+    <strong>OpenClaw</strong>
+    <span>openclaw.json 和 OpenAI 兼容接口</span>
+  </a>
+  <a class="home-card" href="/tools/hermes.html">
+    <strong>Hermes</strong>
+    <span>hermes model 和自定义端点</span>
+  </a>
   <a class="home-card" href="/tools/cline.html">
     <strong>Cline</strong>
     <span>Provider 类型和 Base URL</span>

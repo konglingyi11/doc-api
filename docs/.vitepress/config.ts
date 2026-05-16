@@ -38,6 +38,8 @@ export default defineConfig({
             { text: 'Claude Code', link: '/tools/claude-code' },
             { text: 'Codex', link: '/tools/codex' },
             { text: 'OpenCode', link: '/tools/open-code' },
+            { text: 'OpenClaw', link: '/tools/openclaw' },
+            { text: 'Hermes', link: '/tools/hermes' },
             { text: 'Cline', link: '/tools/cline' },
             { text: 'Cherry Studio', link: '/tools/cherry-studio' },
             { text: 'Continue', link: '/tools/continue' },
