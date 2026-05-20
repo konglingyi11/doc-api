@@ -2,7 +2,20 @@
 
 Claude Code 是 Anthropic 的命令行代码助手。
 
-本文介绍如何通过 CC Switch 配置 API Key、Base URL 和模型名称，并使用多个 Claude 分组令牌做本地路由和故障转移。
+本文先介绍 Claude Code 本体安装、接口格式和推荐接入路径。多分组令牌和 CC Switch 的详细配置已经拆成独立教程。
+
+## 推荐配置路径
+
+如果你只用一个 Key，可以直接配置 Claude Code。
+
+如果你希望使用多个 Claude 分组令牌，并通过本地路由实现故障转移，推荐按下面顺序配置：
+
+1. 安装 Claude Code。
+2. 创建 [Claude 分组令牌](/tools/claude-token)。
+3. 按 [CC Switch 配置教程](/tools/cc-switch) 导入令牌并加入队列。
+4. 回到本文完成验证。
+
+多分组方案适合长时间使用 Claude Code 写代码。当前分组请求失败时，CC Switch 可以按队列切到下一个可用分组。
 
 ## 准备工作
 
@@ -10,11 +23,7 @@ Claude Code 是 Anthropic 的命令行代码助手。
 
 - 一台可正常联网的电脑。
 - 已安装 Node.js 18 或更高版本。
-- 可访问 [CC Switch v3.14.1 官方发布页](https://github.com/farion1231/cc-switch/releases/tag/v3.14.1)。
-- 可访问 [令牌管理页面](https://api.1010101.asia/console/token)。
-- 已有可用账号，并能创建多个不同分组的 Claude 令牌。
-
-如果希望故障转移更有用，建议准备 2 到 3 个不同分组的 Claude 令牌。
+- 如果使用多分组方案，请先准备可访问的 [令牌管理页面](https://api.1010101.asia/console/token)。
 
 ## 这个工具使用什么接口
 
@@ -26,17 +35,11 @@ Claude Code 主要对接 **Anthropic Messages** 格式。
 https://api.1010101.asia
 ```
 
-本文主流程不是在 Claude Code 里手填 Key，而是用 CC Switch 管理多个 Claude 令牌。
+如果走 CC Switch，本地路由和多令牌队列由 CC Switch 管理。通常不需要在 Claude Code 中手动维护多套地址。
 
-## 配置步骤
+## 安装 Claude Code
 
-### 第一步：安装 Claude Code
-
-CC Switch 负责本地路由和故障转移。
-
-Claude Code 本体仍然要先安装。没有 Claude Code，后面的接入流程无法完成。
-
-#### Windows
+### Windows
 
 1. 安装 Node.js 18+。
 2. 执行：
@@ -53,7 +56,7 @@ claude --version
 
 如果能正常输出版本号，说明 Claude Code 已安装成功。
 
-#### macOS
+### macOS
 
 ```bash
 brew install node
@@ -61,7 +64,7 @@ npm install -g @anthropic-ai/claude-code
 claude --version
 ```
 
-#### Linux
+### Linux
 
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
@@ -70,133 +73,22 @@ npm install -g @anthropic-ai/claude-code
 claude --version
 ```
 
-### 第二步：安装 CC Switch
+## 配置方式
 
-访问 [CC Switch v3.14.1 官方下载页](https://github.com/farion1231/cc-switch/releases/tag/v3.14.1)。
+### 方式一：直接配置 Claude Code
 
-根据系统下载对应安装包：
+Claude Code 支持直接配置 `ANTHROPIC_AUTH_TOKEN` 和 `ANTHROPIC_BASE_URL`。
 
-- Windows：`CC-Switch-v3.14.1-Windows.msi`
-- macOS：`CC-Switch-v3.14.1-macOS.dmg`
-- Linux：根据发行版选择 `AppImage`、`.deb` 或 `.rpm`
+这种方式适合只使用一个 Key 的场景。
 
-安装完成后先启动一次，确认软件能正常打开。
+### 方式二：通过 CC Switch 管理多分组
 
-### 第三步：打开本地路由
+这种方式适合需要多个 Claude 分组、优先级队列和自动故障转移的场景。
 
-启动 CC Switch 后进入设置页面。
+继续阅读：
 
-1. 点击主界面左上角的设置按钮，位置如图 1 所示。
-2. 进入“路由”标签页。
-3. 在“本地路由”区域，按图 2 所示开启以下开关：
-   - 在主页面显示本地路由开关
-   - 路由总开关
-   - Claude 路由启用
-
-开启后，Claude 请求会走 CC Switch 的本地路由。
-
-![图 1：点击设置按钮](/images/claude-code/cc-switch-step-1.png)
-*图 1：CC Switch 主界面左上角的设置按钮*
-
-![图 2：在路由中开启本地路由与 Claude 路由](/images/claude-code/cc-switch-step-2.png)
-*图 2：在“设置 -> 路由 -> 本地路由”中开启本地路由和 Claude 路由*
-
-### 第四步：打开自动故障转移
-
-继续留在“设置 -> 路由”页面。
-
-1. 找到“自动故障转移”区域。
-2. 按图 3 所示，开启“在主页面显示故障转移开关”。
-3. 再开启 Claude 下方的“自动故障转移”。
-
-开启后，如果当前分组请求失败，CC Switch 会按队列顺序自动切到下一个可用分组。
-
-![图 3：开启自动故障转移](/images/claude-code/cc-switch-step-3.png)
-*图 3：在“设置 -> 路由 -> 自动故障转移”中开启相关开关*
-
-### 第五步：创建多个分组令牌
-
-访问 [令牌管理页面](https://api.1010101.asia/console/token)。
-
-按图 4 所示，创建多个 Claude 分组令牌。
-
-常见做法：
-
-- 一个高并发分组
-- 一个高稳定分组
-- 一个备用分组
-
-名称尽量写清楚。导入 CC Switch 后更容易分辨。
-
-![图 4：创建多个不同分组的 Claude 令牌](/images/claude-code/cc-switch-step-4.png)
-*图 4：在令牌管理页面创建多个不同分组的 Claude 令牌*
-
-### 第六步：选择 CC Switch
-
-令牌创建完成后，在对应令牌一行的“聊天”按钮右侧点击下拉箭头。
-
-1. 打开下拉菜单。
-2. 选择“CC Switch”，如图 5 所示。
-
-选完后，页面会弹出“填入 CC Switch”窗口。
-
-![图 5：在聊天右侧下拉菜单中选择 CC Switch](/images/claude-code/cc-switch-step-5.png)
-*图 5：在“聊天”右侧下拉菜单中选择 CC Switch*
-
-### 第七步：填写导入参数
-
-在“填入 CC Switch”弹窗中，按照图 6 所示完成填写。
-
-字段按页面提示填写即可。名称建议直接用分组名，或写成自己容易识别的名字。
-
-确认无误后，点击“打开 CC Switch”。
-
-![图 6：填写 CC Switch 所需参数后点击“打开 CC Switch”](/images/claude-code/cc-switch-step-6.png)
-*图 6：填写 CC Switch 导入参数后点击“打开 CC Switch”*
-
-如果浏览器弹出协议唤起窗口，按图 7 所示：
-
-1. 勾选“始终允许”。
-2. 点击“打开”。
-
-这样浏览器会把当前配置交给本地 CC Switch。
-
-![图 7：浏览器弹出唤起确认时点击“打开”](/images/claude-code/cc-switch-step-7.png)
-*图 7：浏览器弹出协议唤起确认框后勾选允许并点击“打开”*
-
-### 第八步：在 CC Switch 中确认导入
-
-浏览器唤起成功后，会自动弹出 CC Switch 软件页面。
-
-按图 8 所示：
-
-1. 检查供应商名称、官网地址、API 端点、API 密钥和模型映射。
-2. 确认无误后，点击“导入”。
-
-![图 8：在 CC Switch 中确认并导入供应商配置](/images/claude-code/cc-switch-step-8.png)
-*图 8：在 CC Switch 中确认供应商配置并点击“导入”*
-
-导入完成后，会回到供应商列表页面。
-
-### 第九步：加入可用队列
-
-在供应商列表中，按图 9 所示点击“加入”。
-
-这一步做完后，该分组才会加入可用队列，后面才能参与本地路由和自动故障转移。
-
-![图 9：点击“加入”把该分组加入队列](/images/claude-code/cc-switch-step-9.png)
-*图 9：点击“加入”把当前分组加入可用队列*
-
-## 配置示例
-
-推荐按下面方式使用：
-
-- 至少加入 2 个不同分组。
-- 把更稳定或额度更充足的分组放前面。
-- 开启自动故障转移。
-- 重复“创建令牌 -> 选择 CC Switch -> 导入 -> 点击加入”，把其他分组也加进去。
-
-如果长时间使用 Claude Code 写代码，多分组通常比单 Key 更稳定。
+- [创建 Claude 分组令牌](/tools/claude-token)
+- [CC Switch 配置教程](/tools/cc-switch)
 
 ## 如何验证
 
@@ -206,8 +98,8 @@ claude --version
 claude --version
 ```
 
-2. 确认 CC Switch 已打开本地路由。
-3. 确认至少一个 Claude 分组已经点击“加入”。
+2. 如果使用 CC Switch，确认 CC Switch 已打开本地路由。
+3. 如果使用 CC Switch，确认至少一个 Claude 分组已经点击“加入”。
 4. 启动 Claude Code，并发送一个简单请求。
 5. 如果能收到正常回复，说明配置成功。
 
@@ -223,36 +115,14 @@ claude --version
 
 如果命令不存在，说明 Claude Code 本体没有装好。
 
-请回到第一步，检查 Node.js 和安装命令。
+请回到安装步骤，检查 Node.js 和安装命令。
 
-### 点击“打开 CC Switch”没有反应
+### 应该直接配置 Claude Code，还是使用 CC Switch
 
-请检查：
-
-- CC Switch 是否已经安装。
-- CC Switch 是否至少启动过一次。
-- 浏览器协议唤起时是否点了“取消”。
-- 本机是否拦截了应用唤起。
-
-### 已导入成功，但没有自动切换
-
-请检查：
-
-- 是否开启了“自动故障转移”。
-- 是否只导入了一个分组。
-- 是否导入了多个分组，但没有点击“加入”。
-- 优先级队列是否按你的预期配置好。
-
-### 应该准备几个令牌
-
-建议至少准备 2 到 3 个不同分组的 Claude 令牌。
-
-如果只有一个令牌，故障转移基本没有意义。
-
-## 注意事项
-
-- Claude Code 支持直接配置 `ANTHROPIC_AUTH_TOKEN` 和 `ANTHROPIC_BASE_URL`。
 - 如果只用一个 Key，可以直接配置 Claude Code。
 - 如果要多分组切换和故障转移，更适合走 CC Switch。
-- 如果走本文“网页导入到 CC Switch”的流程，通常以导入后的配置为准，不需要手动维护多套地址。
-- 模型名称可能变化，填写时以页面里能选到的模型为准。
+- 如果走“网页导入到 CC Switch”的流程，通常以导入后的配置为准，不需要手动维护多套地址。
+
+### 模型名称应该填什么
+
+模型名称可能变化，填写时以页面里能选到的模型为准。

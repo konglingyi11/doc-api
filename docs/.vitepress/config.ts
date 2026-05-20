@@ -36,6 +36,8 @@ export default defineConfig({
           text: '工具配置',
           items: [
             { text: 'Claude Code', link: '/tools/claude-code' },
+            { text: 'Claude 分组令牌', link: '/tools/claude-token' },
+            { text: 'CC Switch', link: '/tools/cc-switch' },
             { text: 'Codex', link: '/tools/codex' },
             { text: 'OpenCode', link: '/tools/open-code' },
             { text: 'OpenClaw', link: '/tools/openclaw' },

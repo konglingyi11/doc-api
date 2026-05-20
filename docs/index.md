@@ -15,7 +15,15 @@ pageClass: home-page
 <div class="home-grid home-grid-tools">
   <a class="home-card" href="/tools/claude-code.html">
     <strong>Claude Code</strong>
-    <span>Claude 接口和 CC Switch 配置</span>
+    <span>Claude Code 安装和配置入口</span>
+  </a>
+  <a class="home-card" href="/tools/claude-token.html">
+    <strong>Claude 分组令牌</strong>
+    <span>创建多个 Claude 令牌分组</span>
+  </a>
+  <a class="home-card" href="/tools/cc-switch.html">
+    <strong>CC Switch</strong>
+    <span>本地路由、导入和故障转移</span>
   </a>
   <a class="home-card" href="/tools/codex.html">
     <strong>Codex</strong>
