@@ -12,42 +12,73 @@ export default defineConfig({
     logo: 'https://rustfs.1010101.asia/api.1010101.asia/logo.png',
     nav: [
       { text: '首页', link: '/' },
-      { text: '通用说明', link: '/guide/common-principles' },
+      { text: '快速开始', link: '/start/common-principles' },
       { text: '工具配置', link: '/tools/claude-code' },
-      { text: '常见问题', link: '/guide/faq' }
+      { text: '能力接口', link: '/capabilities/image2' },
+      { text: '故障排查', link: '/troubleshooting/faq' },
+      { text: '控制台', link: 'https://api.1010101.asia' }
     ],
 
     sidebar: {
-      '/guide/': [
+      '/start/': [
         {
-          text: '通用说明',
+          text: '快速开始',
           items: [
-            { text: '什么是 API Key', link: '/guide/api-key' },
-            { text: '什么是 Base URL', link: '/guide/base-url' },
-            { text: 'image2 图片接口', link: '/guide/image2' },
-            { text: '通用配置原则', link: '/guide/common-principles' },
-            { text: '如何验证配置是否生效', link: '/guide/verify' },
-            { text: '常见问题', link: '/guide/faq' }
+            { text: '通用配置原则', link: '/start/common-principles' },
+            { text: '什么是 API Key', link: '/start/api-key' },
+            { text: '什么是 Base URL', link: '/start/base-url' },
+            { text: '如何验证配置是否生效', link: '/start/verify' }
           ]
         }
       ],
       '/tools/': [
         {
-          text: '工具配置',
+          text: '推荐路径',
           items: [
             { text: 'Claude Code', link: '/tools/claude-code' },
             { text: 'Claude 分组令牌', link: '/tools/claude-token' },
-            { text: 'CC Switch', link: '/tools/cc-switch' },
+            { text: 'CC Switch', link: '/tools/cc-switch' }
+          ]
+        },
+        {
+          text: '命令行工具',
+          items: [
             { text: 'Codex', link: '/tools/codex' },
             { text: 'OpenCode', link: '/tools/open-code' },
             { text: 'OpenClaw', link: '/tools/openclaw' },
-            { text: 'Hermes', link: '/tools/hermes' },
+            { text: 'Hermes', link: '/tools/hermes' }
+          ]
+        },
+        {
+          text: 'IDE 与编辑器插件',
+          items: [
             { text: 'Cline', link: '/tools/cline' },
-            { text: 'Cherry Studio', link: '/tools/cherry-studio' },
             { text: 'Continue', link: '/tools/continue' },
             { text: 'Roo Code', link: '/tools/roo-code' },
             { text: 'Cursor', link: '/tools/cursor' },
             { text: 'Windsurf', link: '/tools/windsurf' }
+          ]
+        },
+        {
+          text: '桌面客户端',
+          items: [
+            { text: 'Cherry Studio', link: '/tools/cherry-studio' }
+          ]
+        }
+      ],
+      '/capabilities/': [
+        {
+          text: '能力接口',
+          items: [
+            { text: 'image2 图片接口', link: '/capabilities/image2' }
+          ]
+        }
+      ],
+      '/troubleshooting/': [
+        {
+          text: '故障排查',
+          items: [
+            { text: '常见问题', link: '/troubleshooting/faq' }
           ]
         }
       ]

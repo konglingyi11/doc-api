@@ -121,17 +121,17 @@ features:
 
 先看这几页：
 
-- [什么是 API Key](/guide/api-key)
-- [什么是 Base URL](/guide/base-url)
-- [通用配置原则](/guide/common-principles)
-- [如何验证配置是否生效](/guide/verify)
-- [常见问题](/guide/faq)
+- [什么是 API Key](/start/api-key)
+- [什么是 Base URL](/start/base-url)
+- [通用配置原则](/start/common-principles)
+- [如何验证配置是否生效](/start/verify)
+- [常见问题](/troubleshooting/faq)
 
 ## 图片接口
 
 image2 是图片接口，不是聊天模型接口。
 
-如果你要生成图片或编辑图片，看 [image2 图片接口教程](/guide/image2)。
+如果你要生成图片或编辑图片，看 [image2 图片接口教程](/capabilities/image2)。
 
 ## 常见问题
 
@@ -143,7 +143,7 @@ image2 是图片接口，不是聊天模型接口。
 - Provider 是否选错
 - 工具需要的是哪种接口格式
 
-更多排查方法见 [常见问题](/guide/faq)。
+更多排查方法见 [常见问题](/troubleshooting/faq)。
 ```
 
 - [ ] **Step 3: Build after homepage rewrite**
@@ -270,7 +270,7 @@ $env:OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxx"
 
 ## 下一步
 
-API Key 填好后，再检查 [Base URL](/guide/base-url)。
+API Key 填好后，再检查 [Base URL](/start/base-url)。
 ```
 
 - [ ] **Step 3: Rewrite `base-url.md`**

@@ -35,7 +35,7 @@
 - Key 是否来自正确服务商。
 - Key 是否过期、撤销或额度用完。
 
-详见 [API Key 教程](/guide/api-key)。
+详见 [API Key 教程](/start/api-key)。
 
 ### 404 Not Found
 
@@ -48,7 +48,7 @@
 - 工具是否会自动补接口路径。
 - 是否把完整路径填到了错误字段。
 
-详见 [Base URL 教程](/guide/base-url)。
+详见 [Base URL 教程](/start/base-url)。
 
 ### Model Not Found
 

@@ -25,7 +25,7 @@ Base URL 是 API 地址。
 
 有些工具要填完整路径。
 
-更多说明见 [Base URL 教程](/guide/base-url)。
+更多说明见 [Base URL 教程](/start/base-url)。
 
 ## 然后填写 API Key
 
@@ -37,7 +37,7 @@ API Key 要填到密钥字段。
 
 不要把其他服务商的 Key 填进来。
 
-更多说明见 [API Key 教程](/guide/api-key)。
+更多说明见 [API Key 教程](/start/api-key)。
 
 ## 最后填写模型名称
 
@@ -68,4 +68,4 @@ API Key 要填到密钥字段。
 
 成功返回内容，才算配置生效。
 
-失败时按报错查。详见 [验证配置教程](/guide/verify)。
+失败时按报错查。详见 [验证配置教程](/start/verify)。

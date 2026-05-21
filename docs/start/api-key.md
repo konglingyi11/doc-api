@@ -82,4 +82,4 @@ $env:ANTHROPIC_API_KEY="sk-ant-xxxxxxxxxxxxxxxxxxxxxxxx"
 
 ## 下一步
 
-继续看 [Base URL 教程](/guide/base-url)。
+继续看 [Base URL 教程](/start/base-url)。

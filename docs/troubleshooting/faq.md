@@ -10,7 +10,7 @@
 - 是否过期、撤销或额度用完。
 - 是否填到了正确字段。
 
-详见 [API Key 教程](/guide/api-key)。
+详见 [API Key 教程](/start/api-key)。
 
 ## Base URL 要不要带 `/v1`？
 
@@ -22,7 +22,7 @@
 
 如果报 404，优先检查这里。
 
-详见 [Base URL 教程](/guide/base-url)。
+详见 [Base URL 教程](/start/base-url)。
 
 ## 为什么提示模型不存在？
 
@@ -65,7 +65,7 @@
 - 模型名称是否可用。
 - Provider 是否选对。
 
-详见 [验证配置教程](/guide/verify)。
+详见 [验证配置教程](/start/verify)。
 
 ## image2 能不能填到代码助手里？
 

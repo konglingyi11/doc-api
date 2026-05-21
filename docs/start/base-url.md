@@ -91,4 +91,4 @@ https://api.example.com/v1/chat/completions
 
 ## 下一步
 
-继续看 [验证配置教程](/guide/verify)。
+继续看 [验证配置教程](/start/verify)。
