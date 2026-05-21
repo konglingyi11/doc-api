@@ -9,7 +9,7 @@ CC Switch 负责 Claude Code 的本地路由和自动故障转移。
 请先准备：
 
 - 已安装 Claude Code。详见 [Claude Code 配置教程](/tools/claude-code)。
-- 已创建 Claude 分组令牌。详见 [创建 Claude 分组令牌](/tools/claude-token)。
+- 已创建 Claude 分组令牌。详见 [创建 API 令牌](/start/api-token)。
 - 可访问 [CC Switch v3.14.1 官方发布页](https://github.com/farion1231/cc-switch/releases/tag/v3.14.1)。
 
 ## 第一步：安装 CC Switch

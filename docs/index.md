@@ -17,6 +17,10 @@ pageClass: home-page
     <strong>通用配置原则</strong>
     <span>接口格式、模型名称和填写顺序</span>
   </a>
+  <a class="home-card" href="/start/api-token.html">
+    <strong>创建 API 令牌</strong>
+    <span>在控制台创建用于工具接入的 API Key</span>
+  </a>
   <a class="home-card" href="/start/api-key.html">
     <strong>什么是 API Key</strong>
     <span>密钥填写位置和 401 排查</span>
@@ -37,10 +41,6 @@ pageClass: home-page
   <a class="home-card" href="/tools/claude-code.html">
     <strong>Claude Code</strong>
     <span>Claude Code 安装和配置入口</span>
-  </a>
-  <a class="home-card" href="/tools/claude-token.html">
-    <strong>Claude 分组令牌</strong>
-    <span>创建多个 Claude 令牌分组</span>
   </a>
   <a class="home-card" href="/tools/cc-switch.html">
     <strong>CC Switch</strong>

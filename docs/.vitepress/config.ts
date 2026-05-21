@@ -25,6 +25,7 @@ export default defineConfig({
           text: '快速开始',
           items: [
             { text: '通用配置原则', link: '/start/common-principles' },
+            { text: '创建 API 令牌', link: '/start/api-token' },
             { text: '什么是 API Key', link: '/start/api-key' },
             { text: '什么是 Base URL', link: '/start/base-url' },
             { text: '如何验证配置是否生效', link: '/start/verify' }
@@ -36,7 +37,6 @@ export default defineConfig({
           text: '推荐路径',
           items: [
             { text: 'Claude Code', link: '/tools/claude-code' },
-            { text: 'Claude 分组令牌', link: '/tools/claude-token' },
             { text: 'CC Switch', link: '/tools/cc-switch' }
           ]
         },
