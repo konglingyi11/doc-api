@@ -14,7 +14,8 @@ import {
 const baseUrl = ref('https://api.1010101.asia')
 const apiKey = ref('')
 const prompt = ref('一张清爽的产品图，主体清晰，背景干净，自然光，细节真实')
-const size = ref('1024x1024')
+const sizePreset = ref('1024x1024')
+const customSize = ref('1024x1024')
 const quality = ref('medium')
 const outputFormat = ref('png')
 const mode = ref('generate')
@@ -34,6 +35,10 @@ const actionText = computed(() => {
   }
 
   return mode.value === 'edit' ? '编辑图片' : '生成图片'
+})
+
+const requestSize = computed(() => {
+  return sizePreset.value === 'custom' ? customSize.value.trim() : sizePreset.value
 })
 
 onMounted(() => {
@@ -59,6 +64,11 @@ async function handleCreateImage() {
     return
   }
 
+  if (!requestSize.value) {
+    errorMessage.value = '请先填写自定义尺寸。'
+    return
+  }
+
   isLoading.value = true
   currentImageUrl.value = ''
 
@@ -67,7 +77,7 @@ async function handleCreateImage() {
       apiKey: apiKey.value,
       baseUrl: baseUrl.value,
       prompt: prompt.value,
-      size: size.value,
+      size: requestSize.value,
       quality: quality.value,
       outputFormat: outputFormat.value
     }
@@ -258,21 +268,25 @@ function resetMessages() {
         <div class="settings-grid">
           <label>
             <span>尺寸</span>
-            <select v-model="size">
-              <option value="1024x1024">方图</option>
-              <option value="1024x1536">竖图</option>
-              <option value="1536x1024">横图</option>
-              <option value="auto">自动</option>
+            <select v-model="sizePreset">
+              <option value="1024x1024">1k</option>
+              <option value="2048x2048">2k</option>
+              <option value="4096x4096">4k</option>
+              <option value="custom">自定义</option>
             </select>
+          </label>
+
+          <label v-if="sizePreset === 'custom'">
+            <span>自定义尺寸</span>
+            <input v-model="customSize" autocomplete="off" spellcheck="false" placeholder="1024x1536" />
           </label>
 
           <label>
             <span>质量</span>
             <select v-model="quality">
-              <option value="medium">普通</option>
               <option value="low">低</option>
-              <option value="high">高清</option>
-              <option value="auto">自动</option>
+              <option value="medium">中</option>
+              <option value="high">高</option>
             </select>
           </label>
 
