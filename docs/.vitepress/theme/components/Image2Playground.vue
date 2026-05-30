@@ -272,6 +272,7 @@ function resetMessages() {
               <option value="1024x1024">1k</option>
               <option value="2048x2048">2k</option>
               <option value="4096x4096">4k</option>
+              <option value="auto">自动</option>
               <option value="custom">自定义</option>
             </select>
           </label>
