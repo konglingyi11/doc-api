@@ -13,7 +13,7 @@ import {
 
 const baseUrl = ref('https://api.1010101.asia')
 const apiKey = ref('')
-const prompt = ref('一张清爽的产品图，主体清晰，背景干净，自然光，细节真实')
+const prompt = ref('一张白底产品图，主体清晰，背景干净，自然光，细节真实')
 const sizePreset = ref('1024x1024')
 const customSize = ref('1024x1024')
 const quality = ref('medium')
@@ -55,7 +55,7 @@ async function handleCreateImage() {
   }
 
   if (!prompt.value.trim()) {
-    errorMessage.value = '请先写图片描述。'
+    errorMessage.value = '请先填写图片描述。'
     return
   }
 
@@ -81,6 +81,7 @@ async function handleCreateImage() {
       quality: quality.value,
       outputFormat: outputFormat.value
     }
+
     const result = mode.value === 'edit'
       ? await editImage2({ ...params, imageFile: selectedFile.value })
       : await generateImage2(params)
@@ -89,11 +90,13 @@ async function handleCreateImage() {
     currentPrompt.value = prompt.value
     currentFormat.value = outputFormat.value
     addHistoryItem(result.imageUrl)
-    statusMessage.value = mode.value === 'edit' ? '编辑完成。可以下载，也可以继续编辑。' : '生成完成。可以下载，也可以继续编辑。'
+    statusMessage.value = mode.value === 'edit'
+      ? '编辑完成。可以下载，也可以继续编辑。'
+      : '生成完成。可以下载，也可以继续编辑。'
   } catch (error) {
     errorMessage.value = error instanceof Error
-      ? `${error.message} 请检查 API Key、Base URL 和接口权限后重试。`
-      : '请求失败。请检查 API Key、Base URL 和接口权限后重试。'
+      ? `${error.message} 请检查 API Key、Base URL、模型权限和接口路径后重试。`
+      : '请求失败。请检查 API Key、Base URL、模型权限和接口路径后重试。'
   } finally {
     isLoading.value = false
   }
@@ -118,13 +121,13 @@ function saveKey() {
   }
 
   saveStoredImage2Key(undefined, apiKey.value)
-  statusMessage.value = '已保存。Key 只在当前浏览器。'
+  statusMessage.value = '已保存。API Key 仅保存在当前浏览器。'
 }
 
 function clearSavedKey() {
   removeStoredImage2Key()
   apiKey.value = ''
-  statusMessage.value = '已删除保存的 Key。'
+  statusMessage.value = '已清除本地保存的 API Key。'
 }
 
 function setGenerateMode() {
@@ -142,8 +145,8 @@ async function continueEdit(item = getCurrentItem()) {
   selectedFile.value = await dataUrlToFile(item.imageUrl, `image2-edit.${item.outputFormat || 'png'}`)
   sourceImageUrl.value = item.imageUrl
   mode.value = 'edit'
-  prompt.value = `继续编辑这张图：${item.prompt || '保留主体，优化质感'}`
-  statusMessage.value = '已切换到编辑模式。改好描述后点击“编辑图片”。'
+  prompt.value = `继续编辑这张图片：${item.prompt || '保留主体，优化质感'}`
+  statusMessage.value = '已切换到编辑模式。修改描述后点击“编辑图片”。'
 }
 
 function downloadImage(item = getCurrentItem()) {
@@ -208,16 +211,16 @@ function resetMessages() {
 <template>
   <section class="image2-workbench" aria-label="image2 在线工具">
     <div class="workbench-heading">
-      <p class="eyebrow">在线工具</p>
-      <h2>试生成一张图</h2>
+      <p class="eyebrow">在线试用</p>
+      <h2>生成或编辑 image2 图片</h2>
       <p>
-        填入 API Key 后，可以直接生成图片，也可以上传图片继续编辑。
-        Key 只保存在当前浏览器。
+        填写 API Key 后，可以直接生成图片，也可以上传图片进行编辑。
+        API Key 只保存在当前浏览器。
       </p>
     </div>
 
     <div class="workbench-layout">
-      <div class="control-panel">
+      <form class="control-panel" @submit.prevent="handleCreateImage">
         <div class="mode-switch" role="tablist" aria-label="选择模式">
           <button type="button" :class="{ active: mode === 'generate' }" @click="setGenerateMode">
             生成图片
@@ -233,12 +236,12 @@ function resetMessages() {
         </label>
 
         <div class="key-actions">
-          <button type="button" class="secondary" @click="saveKey">保存到本浏览器</button>
-          <button type="button" class="ghost" @click="clearSavedKey">删除 Key</button>
+          <button type="button" class="secondary" @click="saveKey">保存到当前浏览器</button>
+          <button type="button" class="ghost" @click="clearSavedKey">删除已保存的 Key</button>
         </div>
 
         <p class="storage-note">
-          还没有 API Key？可以前往
+          API Key 可在
           <a href="https://api.1010101.asia/console/token" target="_blank" rel="noopener noreferrer">https://api.1010101.asia/console/token</a>
           获取。
           保存后只写入当前浏览器的 localStorage。生成或编辑时，浏览器会把 Key 发送给
@@ -262,7 +265,7 @@ function resetMessages() {
 
         <div v-if="sourceImageUrl" class="source-preview">
           <img :src="sourceImageUrl" alt="待编辑图片预览" />
-          <span>将基于这张图编辑</span>
+          <span>将基于此图片进行编辑</span>
         </div>
 
         <div class="settings-grid">
@@ -301,21 +304,21 @@ function resetMessages() {
           </label>
         </div>
 
-        <button type="button" class="primary-action" :disabled="isLoading" @click="handleCreateImage">
+        <button type="submit" class="primary-action" :disabled="isLoading">
           {{ actionText }}
         </button>
 
         <p v-if="statusMessage" class="message success">{{ statusMessage }}</p>
         <p v-if="errorMessage" class="message error">{{ errorMessage }}</p>
-      </div>
+      </form>
 
       <div class="result-panel">
         <div class="result-frame">
           <img v-if="currentImageUrl" :src="currentImageUrl" alt="image2 生成结果" />
           <div v-else class="empty-result">
-            <strong>图片显示在这里</strong>
+            <strong>结果会显示在这里</strong>
             <span>
-              {{ mode === 'edit' ? '上传图片，写好编辑描述，然后点击“编辑图片”。' : '写好图片描述，然后点击“生成图片”。' }}
+              {{ mode === 'edit' ? '上传图片，填写编辑描述，然后点击“编辑图片”。' : '填写图片描述，然后点击“生成图片”。' }}
             </span>
           </div>
         </div>
@@ -350,7 +353,7 @@ function resetMessages() {
               </div>
             </article>
           </div>
-          <p v-else class="empty-history">还没有历史记录。生成或编辑图片后会显示在这里。</p>
+          <p v-else class="empty-history">生成或编辑图片后，历史记录会显示在这里。</p>
         </div>
       </div>
     </div>
@@ -360,10 +363,11 @@ function resetMessages() {
 <style scoped>
 .image2-workbench {
   margin: 24px 0 40px;
-  padding: 22px;
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 8px;
-  background: var(--vp-c-bg-soft);
+  padding: 24px;
+  border: 1px solid var(--doc-border);
+  border-radius: var(--doc-radius);
+  background: linear-gradient(180deg, #fff, var(--doc-surface-soft));
+  box-shadow: var(--doc-shadow);
 }
 
 .workbench-heading {
@@ -373,7 +377,7 @@ function resetMessages() {
 
 .workbench-heading .eyebrow {
   margin: 0 0 6px;
-  color: var(--vp-c-brand-1);
+  color: var(--doc-brand);
   font-size: 13px;
   font-weight: 700;
 }
@@ -382,25 +386,28 @@ function resetMessages() {
   margin: 0 0 8px;
   border: 0;
   padding: 0;
-  font-size: 26px;
+  color: var(--doc-text-strong);
+  font-size: 28px;
 }
 
 .workbench-heading p {
   margin: 0;
-  color: var(--vp-c-text-2);
+  color: var(--doc-text-muted);
+  font-size: 15px;
+  line-height: 1.7;
 }
 
 .workbench-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 22px;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr);
+  gap: 20px;
   align-items: start;
 }
 
 .control-panel,
 .result-panel {
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .mode-switch {
@@ -408,17 +415,17 @@ function resetMessages() {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 6px;
   padding: 4px;
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 8px;
-  background: var(--vp-c-bg);
+  border: 1px solid var(--doc-border);
+  border-radius: var(--doc-radius);
+  background: var(--doc-surface);
 }
 
 .mode-switch button,
 .primary-action,
 .secondary,
 .ghost {
-  min-height: 38px;
-  border-radius: 6px;
+  min-height: 40px;
+  border-radius: var(--doc-radius);
   font: inherit;
   font-weight: 700;
   cursor: pointer;
@@ -426,13 +433,13 @@ function resetMessages() {
 
 .mode-switch button {
   border: 0;
-  color: var(--vp-c-text-2);
+  color: var(--doc-text-muted);
   background: transparent;
 }
 
 .mode-switch button.active {
   color: #fff;
-  background: var(--vp-c-brand-1);
+  background: var(--doc-brand);
 }
 
 .control-panel label {
@@ -440,18 +447,19 @@ function resetMessages() {
   gap: 6px;
   font-size: 14px;
   font-weight: 700;
+  color: var(--doc-text-strong);
 }
 
 .control-panel input,
 .control-panel textarea,
 .control-panel select {
   width: 100%;
-  min-height: 38px;
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 6px;
+  min-height: 40px;
+  border: 1px solid var(--doc-border);
+  border-radius: var(--doc-radius);
   padding: 8px 10px;
-  color: var(--vp-c-text-1);
-  background: var(--vp-c-bg);
+  color: var(--doc-text-strong);
+  background: var(--doc-surface);
   font: inherit;
 }
 
@@ -470,33 +478,33 @@ function resetMessages() {
 
 .storage-note {
   margin: -4px 0 0;
-  color: var(--vp-c-text-2);
+  color: var(--doc-text-muted);
   font-size: 13px;
   line-height: 1.6;
 }
 
 .settings-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
 .primary-action {
   border: 0;
   color: #fff;
-  background: var(--vp-c-brand-1);
+  background: var(--doc-brand);
 }
 
 .secondary {
-  border: 1px solid var(--vp-c-brand-1);
-  color: var(--vp-c-brand-1);
-  background: var(--vp-c-bg);
+  border: 1px solid var(--doc-border);
+  color: var(--doc-text-strong);
+  background: var(--doc-surface);
 }
 
 .ghost {
-  border: 1px solid var(--vp-c-divider);
-  color: var(--vp-c-text-2);
-  background: var(--vp-c-bg);
+  border: 1px solid var(--doc-border);
+  color: var(--doc-text-muted);
+  background: var(--doc-surface);
 }
 
 button:disabled {
@@ -510,10 +518,10 @@ button:disabled {
   gap: 10px;
   align-items: center;
   padding: 8px;
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 8px;
-  background: var(--vp-c-bg);
-  color: var(--vp-c-text-2);
+  border: 1px solid var(--doc-border);
+  border-radius: var(--doc-radius);
+  background: var(--doc-surface);
+  color: var(--doc-text-muted);
   font-size: 13px;
 }
 
@@ -521,7 +529,7 @@ button:disabled {
   width: 72px;
   aspect-ratio: 1;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: var(--doc-radius);
 }
 
 .message {
@@ -530,20 +538,20 @@ button:disabled {
 }
 
 .message.success {
-  color: var(--vp-c-brand-1);
+  color: var(--doc-success);
 }
 
 .message.error {
-  color: var(--vp-c-danger-1);
+  color: #b42318;
 }
 
 .result-frame {
   display: grid;
   place-items: center;
   min-height: 360px;
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 8px;
-  background: var(--vp-c-bg);
+  border: 1px solid var(--doc-border);
+  border-radius: var(--doc-radius);
+  background: var(--doc-surface);
   overflow: hidden;
 }
 
@@ -559,12 +567,12 @@ button:disabled {
   place-items: center;
   min-height: 320px;
   padding: 20px;
-  color: var(--vp-c-text-2);
+  color: var(--doc-text-muted);
   text-align: center;
 }
 
 .empty-result strong {
-  color: var(--vp-c-text-1);
+  color: var(--doc-text-strong);
 }
 
 .history-panel {
@@ -582,6 +590,7 @@ button:disabled {
 .history-heading h3 {
   margin: 0;
   font-size: 18px;
+  color: var(--doc-text-strong);
 }
 
 .history-list {
@@ -596,23 +605,23 @@ button:disabled {
   grid-template-columns: 84px minmax(0, 1fr);
   gap: 10px;
   padding: 10px;
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 8px;
-  background: var(--vp-c-bg);
+  border: 1px solid var(--doc-border);
+  border-radius: var(--doc-radius);
+  background: var(--doc-surface);
 }
 
 .history-item img {
   width: 84px;
   aspect-ratio: 1;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: var(--doc-radius);
 }
 
 .history-item p {
   display: -webkit-box;
   margin: 0 0 4px;
   overflow: hidden;
-  color: var(--vp-c-text-1);
+  color: var(--doc-text-strong);
   font-size: 13px;
   line-height: 1.45;
   -webkit-line-clamp: 2;
@@ -621,7 +630,7 @@ button:disabled {
 
 .history-item span,
 .empty-history {
-  color: var(--vp-c-text-2);
+  color: var(--doc-text-muted);
   font-size: 12px;
 }
 
@@ -642,6 +651,10 @@ button:disabled {
 @media (max-width: 900px) {
   .image2-workbench {
     padding: 16px;
+  }
+
+  .workbench-layout {
+    grid-template-columns: 1fr;
   }
 
   .settings-grid {

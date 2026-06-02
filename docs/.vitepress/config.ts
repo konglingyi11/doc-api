@@ -4,15 +4,18 @@ const rawVersion = process.env.VITEPRESS_VERSION || process.env.npm_package_vers
 const version = rawVersion.replace(/^v/, '')
 
 export default defineConfig({
-  title: '途联通证配置文档',
-  description: '帮助你在常见编程工具中快速配置 API Key、Base URL 与模型接入方式',
+  title: '常见 AI 编程工具接入指南',
+  description: '按创建令牌、填写 Base URL、选择模型和验证请求的顺序，完成工具配置并定位常见错误。',
   lang: 'zh-CN',
+  head: [
+    ['link', { rel: 'icon', href: '/logo.png' }]
+  ],
 
   themeConfig: {
     logo: 'https://rustfs.1010101.asia/api.1010101.asia/logo.png',
     nav: [
       { text: '首页', link: '/' },
-      { text: '快速开始', link: '/start/common-principles' },
+      { text: '快速开始', link: '/start/api-token' },
       { text: '工具配置', link: '/tools/claude-code' },
       { text: '能力接口', link: '/capabilities/image2' },
       { text: '故障排查', link: '/troubleshooting/faq' },
@@ -94,7 +97,7 @@ export default defineConfig({
 
     // 在页脚显示版本号
     footer: {
-      message: `Released under the MIT License. Version v${version}`,
+      message: `文档版本 v${version}`,
       copyright: 'Copyright © 2026-present'
     }
   }
